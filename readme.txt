@@ -4,7 +4,7 @@ Donate link: http://return-true.com/donate/
 Tags: images, attachments
 Requires at least: 2.5
 Tested up to: 2.7
-Stable tag: 4.3
+Stable tag: 1.2
 
 This plugin takes the first menu ordered image that is attached to a post & echo/returns a URL or HTML img tag.
 
