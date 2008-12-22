@@ -26,7 +26,7 @@ No, sorry. It uses some WP functions that only run in the loop.
 
 = What about a post link? =
 
-Well I was going to provide an option to add a link, and I still may a some point, but for the moment I felt it was better for you to make your own link around the image provided. Just wrap a <a> tag around the call to the plugin and use the_title() etc as you would normally.
+The most recent version of the_attached_image() has the added ability to surround the img tag with a href to link to the post, picture(default) or the attachment page.
 
 == Screenshots ==
 
