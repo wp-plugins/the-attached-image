@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: The Attached Image
-Plugin URI: http://return-true.com
+Plugin URI: http://return-true.com/wordpress-plugin-the_attached_image/375/
 Description: Display the first image attached to a post. Use in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
 Version: 1.3
 Author: Paul Robinson
