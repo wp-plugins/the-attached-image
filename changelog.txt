@@ -1,3 +1,9 @@
+V 1.4.1:
+Fixed flaw in width & height checking for custom
+fields.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 1.4:
 Added the ability to use a custom width & height.
 Just like the default pic it can be defined in the
