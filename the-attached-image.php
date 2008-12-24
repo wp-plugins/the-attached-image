@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/wordpress-plugin-the_attached_image/375/
 Description: Display the first image attached to a post. Use in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 1.3
+Version: 1.4
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -11,35 +11,15 @@ Author URI: http://return-true.com
 	The Attached Image is released under the GNU General Public License (GPL)
 	http://www.gnu.org/licenses/gpl.txt
 
-	This is a WordPress 2 plugin (http://wordpress.org). Based on the post image WordPress plugin by Kaf Oseo.
-	
-~Changelog:
-V 1.3:
-Added ability to choose a default image to show
-should there be no image to display. If no default 
-image is defined then nothing will be returned.
-Default image can be defined in the post via
-custom fields using 'default_pic' as the key.
-
-~~~~~~~~~~~~~~~~~~~~~
-
-V 1.2 ~ 75 - 90:
-Added the ability to output a link around the image.
-You can choose to link to the pic (default), the
-attachment page or the post that the image is attached to.
-
-~~~~~~~~~~~~~~~~~~~~~
-
-V 1.1 ~ line 62 & 68:
-Fixed a stupid mistake. Used strict type check for true.
-Not going to work if the true is provided by argument
-as it will be a string not a bool.
+	This is a WordPress 2 plugin (http://wordpress.org).
+	Based on the post image WordPress plugin by Kaf Oseo.
+	Comments are those who wish to learn or make mods.
 */
 
 function the_attached_image($args='') {
 	global $post;
 		
-	parse_str($args);
+	parse_str($args); //parse the arguments given. Set defaults below in case none are set.
 	
 	if( !isset($img_size) ) $img_size = 'thumb';
 	if( !isset($css_class) ) $css_class = 'attached-image';
@@ -48,77 +28,115 @@ function the_attached_image($args='') {
 	if( !isset($href) ) $href = false;
 	if( !isset($link) ) $link = 'pic';
 	if( !isset($default) ) $default = false;
+	if( !isset($width) ) $width = false;
+	if( !isset($height) ) $height = false;
 	
-	if(empty($post))
+	if(empty($post)) //If WP's post array is empty we can't do anything. It probably hasn't been called in a loop.
 		return;
 	
+	//Get the attachments for the current post. Limit to one and order by the menu_order so that the image shown can be changed by the WP gallery.
 	$attachments = get_children("post_parent=".$post->ID."&post_type=attachment&post_mime_type=image&numberposts=1&orderby=menu_order&order=ASC");
 	
-	if(empty($attachments)) {
-		if($pic_meta = get_post_meta($post->ID, 'default_pic', true)) {
-			$default_info = @getimagesize($default);
+	if($m_width = get_post_meta($post->ID, 'att_width', true)) {
+		$width = $m_width;
+	}
+	if($m_height = get_post_meta($post->ID, 'att_height', true)) {
+		$height = $m_height;	
+	}
+
+	$width = ($m_width == false) ? false : $width;
+	$height = ($m_height == false) ? false : $height;
+	//Check for custom fields. To stop function call follow through we need to cancel out the $width or the $height if only one has been set by meta.
+	
+	if(empty($attachments)) { //If attachments is empty then we should check for a default image via meta or via function call.
+		if($pic_meta = get_post_meta($post->ID, 'att_default_pic', true)) {
 			$default = $pic_meta;
 		} elseif($default === false) {
 			return;
 		}
 		
-		$image = '<img src="'.get_bloginfo('url').$default.'" class="'.$css_class.'" '.$default_info[3].' />';
+		//Get the image size using ABSPATH. Suppresion of errors via @ is not expensive despite what you have heard. It's the generation of the error.
+		$default_info = @getimagesize(substr(ABSPATH,0,-1).$default); 
 		
-		if($echo === true || $echo == 'true') {
-			echo $image;
-			return;
+		$image = '<img src="'.get_bloginfo('url').$default.'" class="'.$css_class.'" ';
+		
+		if($height === false && $width === false) { //Sort out the height & width depending on what has been supplied by the user.
+			$image .= !empty($default_info[3]) ? $default_info[3].' />' : ' />'; 
 		} else {
-			return $image;
+			if(!$width === false && !$height === false) {
+				$image .= 'width="'.$width.'" height="'.$height.'" />'; 
+			} elseif(!$width === false) {
+				$image .= 'width="'.$width.'" />';
+			} elseif(!$height === false) {
+				$image .= 'height="'.$height.'" />';
+			}
 		}
 	}
+	
+	if(!isset($image) && empty($image)) { //Gets the correct image depending upon whether or not $image has been set or not.
+	
+		foreach($attachments as $attachment) { //Stops a strange PHP bug.
+			$attachment = $attachment;
+			break;
+		}
+	
+		$img_url = wp_get_attachment_url($attachment->ID); //Get URL to attachment
 		
-	foreach($attachments as $attachment) {
-		$attachment = $attachment;
-		break;
-	}
-
-	$img_url = wp_get_attachment_url($attachment->ID);
-	
-	if ( $img_size == 'medium' ) {
-		if ( $intermediate = image_get_intermediate_size($attachment->ID, $img_size) ) {
-			$img_url = str_replace(basename($img_url), $intermediate['file'], $img_url);
-			$width = $intermediate['width'];
-			$height = $intermediate['height'];
+		//Pick the right size & get it via WP. If a custom height & width was set cancel out WP's.
+		if ( $img_size == 'medium' ) {
+			if ( $intermediate = image_get_intermediate_size($attachment->ID, $img_size) ) {
+				$img_url = str_replace(basename($img_url), $intermediate['file'], $img_url);
+				if($width === false && $height === false) {
+					$width = $intermediate['width'];
+					$height = $intermediate['height'];
+				}
+			}
+		} else {
+			if ( $intermediate = image_get_intermediate_size($attachment->ID, 'thumbnail') ) {
+				$img_url = str_replace(basename($img_url), $intermediate['file'], $img_url);
+				if($width === false && $height === false) {
+					$width = $intermediate['width'];
+					$height = $intermediate['height'];
+				}
+			}
 		}
-	} else {
-		if ( $intermediate = image_get_intermediate_size($attachment->ID, 'thumbnail') ) {
-			$img_url = str_replace(basename($img_url), $intermediate['file'], $img_url);
-			$width = $intermediate['width'];
-			$height = $intermediate['height'];
+		
+		if($img_tag === true || $img_tag == 'true') { //Do they want an image tag along with setting the height & width.
+			$image = '<img src="'.$img_url.'" class="'.$css_class.'" title="'.$attachment->post_title.'"';
+			
+			if(!$width === false && !$height === false) {
+				$image .= ' width="'.$width.'" height="'.$height.'" />'; 
+			} elseif(!$width === false) {
+				$image .= ' width="'.$width.'" />';
+			} elseif(!$height === false) {
+				$image .= ' height="'.$height.'" />';
+			}
+		} else { //You don't want a img tag then? Well heres the URL.
+			$image = $img_url;
 		}
-	}
-	
-	if($img_tag === true || $img_tag == 'true') {	
-		$image = '<img src="'.$img_url.'" class="'.$css_class.'" title="'.$attachment->post_title.'" width="'.$width.'" height="'.$height.'" />';
-	} else {
-		$image = $img_url;
-	}
-	
-	if($href === true || $href == 'true') {
-		switch ($link) {
-			case 'post' :
-				$a_href = '<a href="'.get_permalink($post->ID).'" title="'.$post->post_title.'">%%%</a>';
-			break;
-			case 'attachment' :
-				$a_href = '<a href="'.get_attachment_link($attachment->ID).'" title="'.$attachment->post_title.'">%%%</a>';
-			break;
-			default :
-				$a_href = '<a href="'.wp_get_attachment_url($attachment->ID).'" title="'.$attachment->post_title.'">%%%</a>';
-			break;
+		
+		if($href === true || $href == 'true') { //Do you want a href & where should it point.
+			switch ($link) {
+				case 'post' :
+					$a_href = '<a href="'.get_permalink($post->ID).'" title="'.$post->post_title.'">%%%</a>';
+				break;
+				case 'attachment' :
+					$a_href = '<a href="'.get_attachment_link($attachment->ID).'" title="'.$attachment->post_title.'">%%%</a>';
+				break;
+				default :
+					$a_href = '<a href="'.wp_get_attachment_url($attachment->ID).'" title="'.$attachment->post_title.'">%%%</a>';
+				break;
+			}
 		}
-	}
-	if(isset($a_href) && !empty($a_href)) {
-		$image = str_replace('%%%', $image, $a_href);
+		if(isset($a_href) && !empty($a_href)) { //If they wanted a link put the img tag into it.
+			$image = str_replace('%%%', $image, $a_href);
+		}
+	
 	}
 	
-	if($echo === true || $echo == 'true')
+	if($echo === true || $echo == 'true') //Echo it?
 		echo $image;
-	else
+	else //Ok we'll return it instead.
 		return $image;
 	
 }
