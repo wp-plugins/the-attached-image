@@ -30,7 +30,7 @@ No, sorry. It uses some WP functions that only run in the loop.
 
 = What about a post link? =
 
-The most recent version of the_attached_image() has the added ability to surround the img tag with a href to link to the post, picture(default) or the attachment page.
+The most recent version of `the_attached_image()` has the added ability to surround the img tag with a href to link to the post, picture(default) or the attachment page.
 
 = What about setting a default image? =
 
@@ -40,7 +40,7 @@ As of version 1.4 the key has changed to `att_default_pic` and the value would s
 
 = Can I give a custom width & height> =
 
-You can since version 1.4. The width, height or both can be provided via the function call in the template or via custom fields. You must use the two keys 'att_width' and 'att_height' please do not provide 'px' on the end. If you provide a width or a height the other is generally worked out by the browser. I do advise providing both sizes though.
+You can since version 1.4. The width, height or both can be provided via the function call in the template or via custom fields. You must use the two keys `att_width` and `att_height` please do not provide 'px' on the end. If you provide a width or a height the other is generally worked out by the browser. I do advise providing both sizes though.
 
 == Screenshots ==
 
