@@ -19,7 +19,7 @@ Support for custom sizes has been added since version 1.4. Remember the size is 
 == Installation ==
 
 1. Unzip the zip file.
-1. place the file 'the_attached_image.php' in the 'wp-content/plugins' folder.
+1. place the file `the_attached_image.php` in the `wp-content/plugins` folder.
 1. Place `<?php the_attached_image(); ?>` in your template.
 
 == Frequently Asked Questions ==
