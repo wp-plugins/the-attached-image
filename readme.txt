@@ -38,7 +38,7 @@ Indeed you can. As of version 1.3 you can now set a default image to be shown if
 
 As of version 1.4 the key has changed to `att_default_pic` and the value would still be a domainless absolute path.
 
-= Can I give a custom width & height> =
+= Can I give a custom width & height? =
 
 You can since version 1.4. The width, height or both can be provided via the function call in the template or via custom fields. You must use the two keys `att_width` and `att_height` please do not provide 'px' on the end. If you provide a width or a height the other is generally worked out by the browser. I do advise providing both sizes though.
 
