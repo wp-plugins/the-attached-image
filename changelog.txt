@@ -1,3 +1,8 @@
+V 1.4.2:
+Fixed another flaw in the width & height decision system.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 1.4.1:
 Fixed flaw in width & height checking for custom
 fields.
