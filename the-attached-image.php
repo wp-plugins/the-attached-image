@@ -43,7 +43,7 @@ function the_attached_image($args='') {
 	if(empty($post) && $custom_img === false) //If WP's post array is empty we can't do anything but only if a custom image hasn't been set.
 		return false;
 	
-	if($custom_post === false) {
+	if($custom_img === false) {
 		//Get the attachments for the current post. Limit to one and order by the menu_order so that the image shown can be changed by the WP gallery.
 		$attachments = get_children("post_parent=".$post->ID."&post_type=attachment&post_mime_type=image&numberposts=1&orderby=menu_order&order=ASC");
 	}

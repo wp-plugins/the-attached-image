@@ -1,3 +1,8 @@
+V 1.5.1:
+Fixed an awful mistake. Too much sherry & not enough coffee.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 1.5:
 Added the ability to choose an image that is not attached
 to the current post defined in the post loop. Can be
