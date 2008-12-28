@@ -1,3 +1,8 @@
+V 1.5.2:
+Another fix to the custom width & height system. Damn that thing.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 1.5.1:
 Fixed an awful mistake. Too much sherry & not enough coffee.
 
