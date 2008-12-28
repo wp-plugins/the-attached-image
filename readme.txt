@@ -18,6 +18,8 @@ Support for custom sizes has been added since version 1.4. Remember the size is 
 
 Support for a custom image has been added since version 1.5. You can use this to choose an image that is in WP's database, but is not attached to the current post in the loop. You must know the attachment ID which can be found by hovering over the view button in the media section of wordpress and looking at the status bar in your browser. More in the FAQ.
 
+Please report all bugs by visiting my website & dropping me a comment or by sending me an email to pablorobinson[at]gmail[dot]com. Thank you.
+
 == Installation ==
 
 1. Unzip the zip file.
