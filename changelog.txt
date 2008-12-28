@@ -1,3 +1,11 @@
+V 1.5:
+Added the ability to choose an image that is not attached
+to the current post defined in the post loop. Can be
+selected in the template call or in the custom post meta.
+Requested by Alisher.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 1.4.2:
 Fixed another flaw in the width & height decision system.
 
