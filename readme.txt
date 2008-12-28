@@ -49,7 +49,7 @@ You can since version 1.4. The width, height or both can be provided via the fun
 
 = Can I Choose An Image That Isn't In Attached To The Current Post? =
 
-Yes you can now. You must know the attachment ID which can be found by hovering over the view button in the media section of wordpress and looking at the status bar in your browser. You can use it in two ways, the call in the template like this `<?php the_attached_image('img_size=thumb&custom_img=14'); ?> or you can provide it in the post meta with the key `att_custom_img`. Please be aware that using a call in the template will over-ride the normal function for the plugin, meaning it will always show the image from the provided ID unless a custom post meta for `att_custom_img` is set for one of the posts.
+Yes you can now. You must know the attachment ID which can be found by hovering over the view button in the media section of wordpress and looking at the status bar in your browser. You can use it in two ways, the call in the template like this `<?php the_attached_image('img_size=thumb&custom_img=14'); ?>` or you can provide it in the post meta with the key `att_custom_img`. Please be aware that using a call in the template will over-ride the normal function for the plugin, meaning it will always show the image from the provided ID unless a custom post meta for `att_custom_img` is set for one of the posts.
 
 == Screenshots ==
 
