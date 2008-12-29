@@ -1,5 +1,5 @@
 === The Attached Image ===
-Contributors: veneficusunus
+Contributors: veneficusunus, Brian Wood
 Donate link: http://return-true.com/want-to-help-return-true/
 Tags: images, attachments, posts
 Requires at least: 2.5
