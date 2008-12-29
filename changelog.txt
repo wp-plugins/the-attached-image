@@ -1,10 +1,6 @@
-V 1.5.2:
-Another fix to the custom width & height system. Damn that thing.
-
-~~~~~~~~~~~~~~~~~~~~
-
-V 1.5.1:
-Fixed an awful mistake. Too much sherry & not enough coffee.
+V 1.6:
+Added ability to show the full size image if wanted.
+Suggested by Brian Wood.
 
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -12,7 +8,6 @@ V 1.5:
 Added the ability to choose an image that is not attached
 to the current post defined in the post loop. Can be
 selected in the template call or in the custom post meta.
-Requested by Alisher.
 
 ~~~~~~~~~~~~~~~~~~~~
 

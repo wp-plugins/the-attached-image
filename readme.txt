@@ -10,15 +10,11 @@ This plugin takes the first menu ordered image that is attached to a post & echo
 
 == Description ==
 
-The idea behind this plugin is to show the first image attached to a post. The image that is shown can be customized as the image shown is always the one marked as first in the WordPress gallery order. You can supply a custom CSS class and it will be placed in the img tag. You can also switch between outputing a URL or an full img tag. Finally you can choose whether to echo or return the img or URL. It is also possible to have a href around the image pointing to the post, the full image or the attachment page.
+This plugin's main function allows you to show the first image that is attached to the current post. It must be placed in the post loop. It can also show any image that has been uploaded into the WordPress database by providing it the attachment's ID. There are also a few more features like the ability to show a default image if one isn't present on the current post & the ability to generate a link to either the post, the full image or the attachment page.
 
-Support for using a default image has now been added since version 1.3. It can be defined in the template & then over-rode using the custom fields on any post you like.
+Check out the installation instructions for how to install and a link to the available parameters for the plugin.
 
-Support for custom sizes has been added since version 1.4. Remember the size is changed using the HTML width & height attribute meaning that it will not resize increadibly well, but it is better than nothing. You may provide the sizes by the function call or via custom fields. See the FAQ for more info.
-
-Support for a custom image has been added since version 1.5. You can use this to choose an image that is in WP's database, but is not attached to the current post in the loop. You must know the attachment ID which can be found by hovering over the view button in the media section of wordpress and looking at the status bar in your browser. More in the FAQ.
-
-Please report all bugs by visiting my website & dropping me a comment or by sending me an email to pablorobinson[at]gmail[dot]com. Thank you.
+Please report all bugs by visiting my [website](http://return-true.com/wordpress-plugin-the_attached_image/375/ "Report bugs here.") & dropping me a comment or by sending me an email to pablorobinson[at]gmail[dot]com. Thank you.
 
 == Installation ==
 
