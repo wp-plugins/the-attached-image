@@ -1,3 +1,9 @@
+V 1.6.1:
+Forgot to remove my testing comment & cleaned the header a litle.
+Thanks to Steve for pointing out the bug.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 1.6:
 Added ability to show the full size image if wanted.
 Suggested by Brian Wood.
