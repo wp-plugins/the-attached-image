@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/wordpress-plugin-the_attached_image/375/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 1.6.1
+Version: 1.7
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -31,6 +31,7 @@ function the_attached_image($args='') {
 	if( !isset($width) ) $width = false;
 	if( !isset($height) ) $height = false;
 	if( !isset($custom_img) ) $custom_img = false;
+	if( !isset($image_order) ) $image_order = 1;
 	
 	if(!$custom_img === false) {
 		if($custom_img_meta = get_post_meta($post->ID, 'att_custom_img', true)) {
@@ -45,7 +46,12 @@ function the_attached_image($args='') {
 	
 	if($custom_img === false) {
 		//Get the attachments for the current post. Limit to one and order by the menu_order so that the image shown can be changed by the WP gallery.
-		$attachments = get_children("post_parent=".$post->ID."&post_type=attachment&post_mime_type=image&numberposts=1&orderby=menu_order&order=ASC");
+		if(function_exists('wp_enqueue_style')) {
+			$attachments = get_children(array('post_parent' => $post->ID, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID'));
+		} else { 
+			//WP2.5 Compat...
+			$attachments = get_children('post_parent='.$post->ID.'&post_type=attachment&post_mime_type=image&orderby="menu_order ASC, ID ASC"');
+		};
 	}
 	
 	$m_width = get_post_meta($post->ID, 'att_width', true);
@@ -89,7 +95,18 @@ function the_attached_image($args='') {
 	
 	if(!isset($image) && empty($image)) { //Gets the correct image depending upon whether or not $image has been set or not.
 	
-		$attachment = current($attachments);
+		$i = 0;
+		
+		foreach($attachments as $id => $attachment) :
+			$i++;
+			if($i == $image_order) :
+				$attachment = $attachment;
+				break;
+			endif;
+		endforeach;
+
+	
+		//$attachment = current($attachments);
 
 		$img_url = wp_get_attachment_url($attachment->ID); //Get URL to attachment
 		

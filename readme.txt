@@ -1,10 +1,10 @@
 === The Attached Image ===
-Contributors: veneficusunus, Brian Wood
+Contributors: veneficusunus
 Donate link: http://return-true.com/want-to-help-return-true/
 Tags: images, attachments, posts
 Requires at least: 2.5
 Tested up to: 2.8-bleeding-edge
-Stable tag: 1.6.1
+Stable tag: 1.7
 
 This plugin takes the first menu ordered image that is attached to a post & echo/returns a URL or HTML img tag with or without a link to the post, full picture or attachment page.
 
@@ -46,6 +46,10 @@ You can since version 1.4. The width, height or both can be provided via the fun
 = Can I Choose An Image That Isn't In Attached To The Current Post? =
 
 Yes you can now. You must know the attachment ID which can be found by hovering over the view button in the media section of wordpress and looking at the status bar in your browser. You can use it in two ways, the call in the template like this `<?php the_attached_image('img_size=thumb&custom_img=14'); ?>` or you can provide it in the post meta with the key `att_custom_img`. Please be aware that using a call in the template will over-ride the normal function for the plugin, meaning it will always show the image from the provided ID unless a custom post meta for `att_custom_img` is set for one of the posts.
+
+= Can I pick An Image Without Using The Gallery To Change The Order? =
+
+Why yes you can. If you want to pick an image attached to a post, but don't want to change the order in the WP Gallery you can use the `image_order` option to pick an image to show. If a post doesn't have that number of images it will show the nearest it can get. For example if you pick 4 & a post only has 2 images it will show the second. An example might be `<?php the_attached_image('img_size=medium&image_order=3'); ?>`.
 
 == Screenshots ==
 

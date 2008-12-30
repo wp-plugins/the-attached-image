@@ -1,3 +1,8 @@
+V 1.7:
+Added image_order option after a request by Steve.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 1.6.1:
 Forgot to remove my testing comment & cleaned the header a litle.
 Thanks to Steve for pointing out the bug.
