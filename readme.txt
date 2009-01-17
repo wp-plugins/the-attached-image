@@ -4,7 +4,7 @@ Donate link: http://return-true.com/want-to-help-return-true/
 Tags: images, attachments, posts
 Requires at least: 2.5
 Tested up to: 2.8-bleeding-edge
-Stable tag: 1.7
+Stable tag: 1.8
 
 This plugin takes the first menu ordered image that is attached to a post & echo/returns a URL or HTML img tag with or without a link to the post, full picture or attachment page.
 

@@ -142,6 +142,10 @@ function the_attached_image($args='') {
 		if($img_tag === true || $img_tag == 'true') { //Do they want an image tag along with setting the height & width.
 			$image = '<img src="'.$img_url.'" class="'.$css_class.'" title="'.$attachment->post_title.'"';
 			
+			if(!empty($attachment->post_content)) {
+				$image .= ' alt="'.$attachment->post_content.'"';
+			}
+			
 			if(!$width === false && !$height === false) {
 				$image .= ' width="'.$width.'" height="'.$height.'" />'; 
 			} elseif(!$width === false) {

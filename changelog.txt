@@ -1,3 +1,9 @@
+V 1.8:
+If a description is supplied to the image within WP that will be
+inserted as the image's alt attribute.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 1.7:
 Added image_order option after a request by Steve.
 
