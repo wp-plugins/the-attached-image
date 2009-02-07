@@ -30,15 +30,13 @@ function the_attached_image($args='') {
 	if( !isset($default) ) $default = false;
 	if( !isset($width) ) $width = false;
 	if( !isset($height) ) $height = false;
-	if( !isset($custom_img) ) $custom_img = false;
 	if( !isset($image_order) ) $image_order = 1;
 	
-	if(!$custom_img === false) {
-		if($custom_img_meta = get_post_meta($post->ID, 'att_custom_img', true)) {
+	if($custom_img_meta = get_post_meta($post->ID, 'att_custom_img', true)) {
 			$attachments = array(get_post($custom_img_meta));
-		} else {
-			$attachments = array(get_post($custom_img));
-		}
+			$custom_img = true;
+	} else {
+			$custom_img = false;	
 	}
 	
 	if(empty($post) && $custom_img === false) //If WP's post array is empty we can't do anything but only if a custom image hasn't been set.
@@ -158,6 +156,11 @@ function the_attached_image($args='') {
 		}
 		
 		if($href === true || $href == 'true') { //Do you want a href & where should it point.
+		
+			if(get_post_meta($post->ID, 'att_custom_link', true) != "") {
+				$link = "custom"; //override the link to custom because the custom field is set.
+			}
+			
 			switch ($link) {
 				case 'post' :
 					$a_href = '<a href="'.get_permalink($post->ID).'" title="'.$post->post_title.'">%%%</a>';
@@ -166,9 +169,8 @@ function the_attached_image($args='') {
 					$a_href = '<a href="'.get_attachment_link($attachment->ID).'" title="'.$attachment->post_title.'">%%%</a>';
 				break;
 				case 'custom' :
-					if($link_meta = get_post_meta($post->ID, 'att_custom_link', true)) {
-						$a_href = '<a href="'.$link_meta.'">%%%</a>';
-					}
+					$link_meta = get_post_meta($post->ID, 'att_custom_link', true); //no need to check since it wouldn't be here if it were empty.
+					$a_href = '<a href="'.$link_meta.'">%%%</a>';
 				break;
 				default :
 					$a_href = '<a href="'.wp_get_attachment_url($attachment->ID).'" title="'.$attachment->post_title.'">%%%</a>';
