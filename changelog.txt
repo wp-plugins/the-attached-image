@@ -1,3 +1,9 @@
+V 1.9:
+You can now supply a custom link path for the image to point to.
+Use link=custom and the custom field key 'att_custom_link'
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 1.8:
 If a description is supplied to the image within WP that will be
 inserted as the image's alt attribute.
