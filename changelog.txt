@@ -1,3 +1,9 @@
+V 2.0.1:
+Fixed a small bug in the custom link feature.
+Thanks to Jennifer once more for pointing it out.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.0:
 Changed the method by which custom field work to one suggested
 by Jennifer of scriptygoddess.com. Thanks to Jen for that suggestion
