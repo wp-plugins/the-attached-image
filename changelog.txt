@@ -1,3 +1,9 @@
+V 2.1:
+Added support for adding the rel attribute to the href.
+Thanks to Dip for the suggestion.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.0.1:
 Fixed a small bug in the custom link feature.
 Thanks to Jennifer once more for pointing it out.
