@@ -1,6 +1,6 @@
 === The Attached Image ===
 Contributors: veneficusunus
-Donate link: http://return-true.com/want-to-help-return-true/
+Donate link: http://return-true.com/donations/
 Tags: images, attachments, posts
 Requires at least: 2.5
 Tested up to: 2.8-bleeding-edge
