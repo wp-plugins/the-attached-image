@@ -61,7 +61,7 @@
    <h3>Custom Field Info</h3>
    <p>Some of the options can be changed on a post by post basis through the use of custom fields. These are the available keys, what they do &amp; the values they expect. All of the keys prepended with <em>att</em> so that they are easily recogniseable as for use with The Attached Image &amp; to stop conflicts with other plugins that may use custom fields.</p>
    <dl>
-   	<dt><strong>Key:</strong> <em>att_custom_image</em></dt>
+   	<dt><strong>Key:</strong> <em>att_custom_img</em></dt>
     <dd>This field is used to show any image from the WordPress attachment database, even if it isn't attached to the current post. It requires the ID of the image you wish to show. It can generally be found out in the media section of WordPress.</dd>
     <dt><strong>Key:</strong> <em>att_default_pic</em></dt>
     <dd>Allows you to override the default picture that is to be shown if no picture is available. Path rules are exactly the same as the previously mentioned option.</dd>
