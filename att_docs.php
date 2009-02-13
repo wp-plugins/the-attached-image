@@ -53,7 +53,7 @@
     <dd>Fairly obvious... Whether to make an image tag or just place the full URL to the selected size image onto the page. If a link location is selected then it will also create the selected hyperlink around the URL. This can be useful to some people so feel free to be inventive.</dd>
     <dt><strong><em>Echo or Return:</em></strong></dt>
     <dd>Also fairly obvious, if you are a coder. Tells the plugin whether to echo out the output or return the output ready for processing by PHP. Can also be used to do some inventive stuff with the output.</dd>
-    <dt><strong><em>Hyperlink Rel Attribute</em></strong></dt>
+    <dt><strong><em>Hyperlink Rel Attribute:</em></strong></dt>
     <dd>This should allow the plugin to work with most, if not all lightbox scripts. Refer to the documention of the lightbox script for what to place in the rel attribute.</dd>
     <dt><strong><em>Image Order:</em></strong></dt>
     <dd>By default the plugin will use the image in the first position of the WordPress gallery page. The image to show can be changed by reordering the images on the WP gallery screen, however you can use this to change which image it will pick. If you change this to 3 it will always try to pick the 3rd image in the WP gallery order. If there isn't 3 images it will pick the nearest it can get to the 3rd image.</dd>
