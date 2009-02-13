@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.2
+Version: 2.3
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -26,13 +26,15 @@ function att_add_options() {
 }
 
 function att_options_page() {
-        // variables for the field and option names 
+    // variables for the field and option names 
     $opt_name = array('img_size' =>'att_img_size',
 					  'css_class' => 'att_css_class',
 					  'img_width' => 'att_img_width',
 					  'img_height' => 'att_img_height',
 					  'default_img' => 'att_default_img',
 					  'href' => 'att_href',
+					  'alt' => 'att_alt',
+					  'link_title' => 'att_link_title',
 					  'img_tag' => 'att_img_tag',
 					  'echo' => 'att_echo',
 					  'href_rel' => 'att_href_rel',
@@ -46,6 +48,8 @@ function att_options_page() {
 					 'img_height' => get_option( $opt_name['img_width'] ),
 					 'default_img' => get_option( $opt_name['default_img'] ),
 					 'href' => get_option( $opt_name['href'] ),
+					 'alt' => get_option( $opt_name['alt'] ),
+					 'link_title' => get_option( $opt_name['link_title'] ),
 					 'img_tag' => get_option( $opt_name['img_tag']),
 					 'echo' => get_option( $opt_name['echo']),
 					 'href_rel' => get_option( $opt_name['href_rel']),
@@ -61,6 +65,8 @@ function att_options_page() {
 						 'img_height' => $_POST[ $opt_name['img_height'] ],
 						 'default_img' => $_POST[ $opt_name['default_img'] ],
 						 'href' => $_POST[ $opt_name['href'] ],
+						 'alt' => $_POST[ $opt_name['alt'] ],
+						 'link_title' => $_POST[ $opt_name['link_title'] ],
 						 'img_tag' => $_POST[ $opt_name['img_tag'] ],
 						 'echo' => $_POST[ $opt_name['echo'] ],
 						 'href_rel' => $_POST[ $opt_name['href_rel'] ],
@@ -73,6 +79,8 @@ function att_options_page() {
 		update_option( $opt_name['img_height'], $opt_val['img_height'] );
 		update_option( $opt_name['default_img'], $opt_val['default_img'] );
 		update_option( $opt_name['href'], $opt_val['href'] );
+		update_option( $opt_name['alt'], $opt_val['alt'] );
+		update_option( $opt_name['link_title'], $opt_val['link_title'] );
 		update_option( $opt_name['img_tag'], $opt_val['img_tag'] );
 		update_option( $opt_name['echo'], $opt_val['echo'] );
 		update_option( $opt_name['href_rel'], $opt_val['href_rel'] );
@@ -95,9 +103,9 @@ function att_options_page() {
 <h2><?php _e( 'The Attached Image', 'att_trans_domain' ); ?></h2>
 <?php
 if(isset($_GET['wpatt-page']) && $_GET['wpatt-page'] == 'docs') {
-	require_once('att_docs.php');
+	require_once('att_docs.php'); //select the documentation.
 } else {
-	require_once('att_options.php');	
+	require_once('att_options.php'); //select the options entry page.	
 }
 ?>
 </div>
@@ -108,26 +116,79 @@ if(isset($_GET['wpatt-page']) && $_GET['wpatt-page'] == 'docs') {
 function the_attached_image($args='') {
 	global $post;
 		
-	parse_str($args); //parse the arguments given. Set defaults below in case none are set.
+	parse_str($args); //Tenutive support for the old options method. Please use the options page, it's much neater.
 	
-	if( !isset($img_size) && !get_option('att_img_size') ) $img_size = 'thumb'; else $img_size = get_option('att_img_size');
-	if( !isset($css_class) && !get_option('att_css_class') ) $css_class = 'attached-image'; else $css_class = get_option('att_css_class');
-	if( !isset($img_tag) && !get_option('att_img_tag') ) $img_tag = true; else $img_tag = get_option('att_img_tag');
-	if( !isset($echo) && !get_option('att_echo') )  $echo = true; else $echo = get_option('att_echo');
-	if( !isset($href) ) $href = false;
+	if( !isset($img_size) && !get_option('att_img_size') )
+		$img_size = 'thumb';
+	else
+		$img_size = get_option('att_img_size');
+		
+	if( !isset($css_class) && !get_option('att_css_class') )
+		$css_class = 'attached-image';
+	else
+		$css_class = get_option('att_css_class');
+		
+	if( !isset($img_tag) && !get_option('att_img_tag') )
+		$img_tag = true; 
+	else 
+		$img_tag = get_option('att_img_tag');
+		
+	if( !isset($echo) && !get_option('att_echo') ) 
+		$echo = true; 
+	else
+		$echo = get_option('att_echo');
+		
+	if( !isset($href) )
+		$href = false;
+		
 	if( !isset($link) && !get_option('att_href') ) {
 		$link = 'none';
 	} else {
 		$link = get_option('att_href');
+		
 		if($link != 'none') {
 			$href = true;
 		} else {
 			$href = false;	
 		}
+		
 	}
-	if( !isset($default) && !get_option('att_default_img') ) $default = false; else $default = get_option('att_default_img');
-	if( !isset($width) && !get_option('att_img_width')) $width = false; else $width = get_option('att_img_width');
-	if( !isset($height) && !get_option('att_img_height')) $height = false; else $height = get_option('att_img_height');
+	
+	if( !isset($alt) && !get_option('att_alt') ) {
+		$alt = 'image-name'; 
+	} else {
+		if(get_post_meta($post->ID, 'att_custom_alt', true)) {
+			$alt = 'custom';
+		} else {
+			$alt = get_option('att_alt');
+		}
+	}
+	
+	if( !isset($link_title) && !get_option('att_link_title') ) {
+		$link_title = 'image-name'; 
+	} else {
+		if(get_post_meta($post->ID, 'att_custom_link_title', true)) {
+			$link_title = 'custom';
+		} else {
+			$link_title = get_option('att_link_title');
+		}
+	}
+	
+	if( !isset($default) && !get_option('att_default_img') )
+		$default = false;
+	else 
+		$default = get_option('att_default_img');
+		
+	if( !isset($width) && !get_option('att_img_width'))
+		$width = false;
+	else
+		$width = get_option('att_img_width');
+		
+	if( !isset($height) && !get_option('att_img_height'))
+		$height = false;
+	else 
+		$height = get_option('att_img_height');
+		
 	if( !isset($image_order) && !get_option('att_img_order') ) {
 		$image_order = 1;
 	} else {
@@ -137,7 +198,11 @@ function the_attached_image($args='') {
 		else
 			$image_order = 1;
 	}
-	if( !isset($rel) && !get_option('att_href_rel') ) $rel = false; else $rel = get_option('att_href_rel');
+	
+	if( !isset($rel) && !get_option('att_href_rel') )
+		$rel = false; 
+	else
+		$rel = get_option('att_href_rel');
 	
 	if($custom_img_meta = get_post_meta($post->ID, 'att_custom_img', true)) {
 			$attachments = array(get_post($custom_img_meta));
@@ -146,13 +211,19 @@ function the_attached_image($args='') {
 			$custom_img = false;	
 	}
 	
-	if(empty($post) && $custom_img === false && get_post_meta($post->ID, 'att_default_pic', true) == "") //If WP's post array is empty we can't do anything but only if a custom image hasn't been set.
+	//If WP's post array is empty we can't do anything but only if a custom image hasn't been set.
+	if(empty($post) && $custom_img === false && get_post_meta($post->ID, 'att_default_pic', true) == "")
 		return false;
 	
 	if($custom_img === false) {
 		//Get the attachments for the current post. Limit to one and order by the menu_order so that the image shown can be changed by the WP gallery.
 		if(function_exists('wp_enqueue_style')) {
-			$attachments = get_children(array('post_parent' => $post->ID, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID'));
+			$attachments = get_children(array('post_parent' => $post->ID,
+											  'post_status' => 'inherit',
+											  'post_type' => 'attachment',
+											  'post_mime_type' => 'image',
+											  'order' => 'ASC',
+											  'orderby' => 'menu_order ID'));
 		} else { 
 			//WP2.5 Compat...
 			$attachments = get_children('post_parent='.$post->ID.'&post_type=attachment&post_mime_type=image&orderby="menu_order ASC, ID ASC"');
@@ -181,7 +252,29 @@ function the_attached_image($args='') {
 			return false;
 		}
 		
-		$image = '<img src="'.get_bloginfo('url').$default.'" class="'.$css_class.'" alt="Placeholder Image" ';
+		$image = '<img src="'.get_bloginfo('url').$default.'" class="'.$css_class.'" ';
+		
+		//Figure out the alt value for the default image
+		switch($alt) {
+			case 'image-description' :
+			case 'image-name' :
+				$parts = pathinfo($default);
+				$alt_text = $parts['filename'];
+			break;
+			case 'post-title' :
+				$alt_text = $post->post_title;
+			break;
+			case 'post-slug' :
+				$alt_text = $post->post_name;
+			break;
+			case 'custom' :
+				//if it doesn't match any of those it must be custom.
+				$alt_text = str_replace('"', '', get_post_meta($post->ID, 'att_custom_alt', true));
+			break;
+		}
+		
+		if(!empty($alt_text))
+			$image .= 'alt="'.$alt_text.'"';
 		
 		if($height === false && $width === false) { //Sort out the height & width depending on what has been supplied by the user.
 			//Get the image size using ABSPATH. Suppresion of errors via @ is not expensive despite what you have heard. It's the generation of the error.
@@ -276,13 +369,30 @@ function the_attached_image($args='') {
 		} 
 		
 		if($img_tag === true || $img_tag == 'true') { //Do they want an image tag along with setting the height & width.
-			$image = '<img src="'.$img_url.'" class="'.$css_class.'" title="'.$attachment->post_title.'"';
+			$image = '<img src="'.$img_url.'" class="'.$css_class.'"';
 			
-			if(!empty($attachment->post_content)) {
-				$image .= ' alt="'.$attachment->post_content.'"';
-			} else {
-				$image .= ' alt="'.$attachment->post_title.'"';	
+			//Figure out the alt value for the proper image.
+			switch($alt) {
+				case 'image-name' :
+					$alt_text = $attachment->post_title;
+				break;
+				case 'image-description' :
+					$alt_text = (!empty($attachment->post_content)) ? $attachment->post_content : $attachment->post_title;
+				break;
+				case 'post-title' :
+					$alt_text = $post->post_title;
+				break;
+				case 'post-slug' :
+					$alt_text = $post->post_name;
+				break;
+				case 'custom' :
+					//if it doesn't match any of those it must be custom.
+					$alt_text = str_replace('"', '', get_post_meta($post->ID, 'att_custom_alt', true));
+				break;
 			}
+		
+			if(!empty($alt_text))
+				$image .= ' alt="'.$alt_text.'"';
 			
 			if(!$width === false && !$height === false) {
 				$image .= ' width="'.$width.'" height="'.$height.'" />'; 
@@ -301,22 +411,53 @@ function the_attached_image($args='') {
 		}
 		
 		if($href === true || $href == 'true') { //Do you want a href & where should it point.
+			//First lets figure out what title text they want...
+			
+			switch($link_title) {
+				case 'image-name' :
+					if(!empty($attachment->post_title)) {//if this is a default image we won't be able to use the $attachments object
+						$a_title_text = $attachment->post_title; 
+					} else {
+						$parts = pathinfo($default); //use the filename instead
+						$a_title_text = $parts['filename'];
+					}
+				break;
+				case 'image-description' :
+					if(empty($attachment->post_content) && empty($attachment->post_title)) { //If we cant find both then it's the default again
+						$parts = pathinfo($default); //use the filename instead
+						$a_title_text = $parts['filename'];
+					} else {
+						$a_title_text = (!empty($attachment->post_content)) ? $attachment->post_content : $attachment->post_title;
+					}
+				break;
+				case 'post-title' :
+					$a_title_text = $post->post_title;
+				break;
+				case 'post-slug' :
+					$a_title_text = $post->post_name;
+				break;
+				case 'custom' :
+					//if it doesn't match any of those it must be custom.
+					$a_title_text = str_replace('"', '', get_post_meta($post->ID, 'att_custom_link_title', true));
+				break;
+			}
+			
 			switch ($link) {
 				case 'post' :
-					$a_href = '<a href="'.get_permalink($post->ID).'" title="'.$post->post_title.'">%%%</a>';
+					$a_href = '<a href="'.get_permalink($post->ID).'" title="'.$a_title_text.'">%%%</a>';
 				break;
 				case 'attachment' :
-					$a_href = '<a href="'.get_attachment_link($attachment->ID).'" title="'.$attachment->post_title.'">%%%</a>';
+					$a_href = '<a href="'.get_attachment_link($attachment->ID).'" title="'.$a_title_text.'">%%%</a>';
 				break;
 				case 'custom' :
 					$link_meta = get_post_meta($post->ID, 'att_custom_link', true); //no need to check since it wouldn't be here if it were empty.
-					$a_href = '<a href="'.$link_meta.'">%%%</a>';
+					$a_href = '<a href="'.$link_meta.'" title="'.$a_title_text.'">%%%</a>';
 				break;
 				default :
 					if(!$rel === false) {
-						$a_href = '<a href="'.wp_get_attachment_url($attachment->ID).'" rel="'.$rel.'" title="'.$attachment->post_title.'">%%%</a>';
+						$a_href = '<a href="'.wp_get_attachment_url($attachment->ID).'" rel="'.$rel.'" title="'.$a_title_text.'">%%%</a>';
 					} else {
-						$a_href = '<a href="'.wp_get_attachment_url($attachment->ID).'" title="'.$attachment->post_title.'">%%%</a>';
+						$a_href = '<a href="'.wp_get_attachment_url($attachment->ID).'" title="'.$a_title_text.'">%%%</a>';
 					}
 				break;
 			}

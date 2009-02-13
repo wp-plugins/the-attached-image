@@ -28,8 +28,8 @@
     <li>Go to the 'The Attached Image' options page under the WordPress Appearence menu.</li>
   </ol>
   <h3>Options</h3>
-  <p>The Attached Image now comes with an options page so you don't have to get into the nitty gritty of all the complicated code to make it work. Here is a description of what each option does. First the general options:</p>
   <h4>General Options</h4>
+  <p>The Attached Image now comes with an options page so you don't have to get into the nitty gritty of all the complicated code to make it work. Here is a description of what each option does. First the general options:</p>
   <dl>
    <dt><strong><em>Image Size</em></strong></dt>
    <dd>This is the size of image you would like to use. As of version 2.2 it supports WordPress' generated thumbnails, medium size, large size images, and of course the original full size image.</dd>
@@ -41,9 +41,13 @@
    <dd>A simple one. This is the path to a default image if you wish to use one. Empty or leave the box empty to disable it. <strong>Very Important</strong> the image path must be from the WordPress root &amp; not your hosts root, it must also start with a forward slash (/). So if your blog is in <code>http://example.com/blog/</code> and you kept the image <code>default.jpg</code> in the <code>wp-content</code> folder the path would still just be <code>/wp-content/default.jpg</code> and <strong>NOT</strong> <code>/blog/wp-content/default.jpg</code></dd>
    <dt><strong><em>Image Link Location</em></strong></dt>
    <dd>Do you want a link to be placed on the image that is produced &amp; if so where do you want it to point. The possible options are no link, post, image &amp; attachment page. I think it's pretty self explanitory what they do. You can also provide a custom link on a post by post basis, more on that in the custom fields section further down the page.</dd>
+   <dt><strong><em>Image Alternate Text:</em></strong></dt>
+   <dd>Allows you to choose what the default alternate text for the image should be. You can choose either image filename, image description, post title or post slug. The description is taken from the description field that you can fill in when uploading an image via WordPress' uploader. If one isn't provided it falls back to the images filename. A custom value may be input via custom fields, see Custom Field Info below.</dd>
+   <dt><strong><em>Link Title Text:</em></strong></dt>
+   <dd>This is the text placed in the title attribute of the hyperlink placed around the image. This will only have an effect if you do <strong>NOT</strong> have Image Link Location set to No Link. The options are the same as the alternated text &amp; a custom value can be input via custom fields, see Custom Field Info below.</dd>
   </dl>
-  <p>The following are advanced options. If you aren't comfortable messing around with them then just leave them. You can actually stop the plugin from working correctly by selecting the wrong option here so please be careful. If you are a seasoned coder or know what you are doing then ignore this &amp; happy hunting.
   <h4>Advanced Options</h4>
+  <p>The following are advanced options. If you aren't comfortable messing around with them then just leave them. You can actually stop the plugin from working correctly by selecting the wrong option here so please be careful. If you are a seasoned coder or know what you are doing then ignore this &amp; happy hunting.</p>
   <dl>
   	<dt><strong><em>Generate An Image Tag</em></strong></dt>
     <dd>Fairly obvious... Whether to make an image tag or just place the full URL to the selected size image onto the page. If a link location is selected then it will also create the selected hyperlink around the URL. This can be useful to some people so feel free to be inventive.</dd>
@@ -65,6 +69,10 @@
     <dd>Pretty obvious, but it allows you to change the width &amp; height of the image. It again uses the in-built browser method of resizing, so again be careful. Also please remember these are two seperate keys, I have listed them together but you must use two custom fields one for width & one for height.</dd>
     <dt><strong>Key:</strong> <em>att_custom_link</em></dt>
     <dd>Allows you to chose a custom URL for the hyperlink to go to. It will override the setting chosen in the options page for that single post. If you have selected no link in the options using this will override it and create a hyperlink for that single post.</dd>
+    <dt><strong>Key:</strong> <em>att_custom_alt</em></dt>
+    <dd>Allows you to chose a custom alt attibute to be placed in the image tag.</dd>
+    <dt><strong>Key:</strong> <em>att_custom_link_title</em></dt>
+    <dd>Allows you to chose a custom title attribute to be placed in the hyperlink. Only has an effect if Link Image Location is <strong>NOT</strong> set to No Link.</dd>
    </dl>
    <h3>More Questions?</h3>
    <p>Then drop by <a href="http://return-true.com/2008/12/wordpress-plugin-the-attached-image/" title="Home of The Attached Image Plugin">Return True</a> and leave a comment and I will get back to you with an answer ASAP.</p>

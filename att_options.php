@@ -6,27 +6,17 @@
   <table class="form-table">
   	<tbody>
     <tr>
-      <th rowspan="4" valign="top">
+      <th valign="top">
         <?php _e("Image Size:", 'att_trans_domain' ); ?>
       </th>
-      <td><label>
-          <input type="radio" name="<?php echo $opt_name['img_size']; ?>" value="thumb" <?php if($opt_val['img_size'] == "thumb") echo 'checked="checked"'; ?> />
-          Thumbnail</label></td>
-    </tr>
-    <tr>
-      <td><label>
-          <input type="radio" name="<?php echo $opt_name['img_size']; ?>" value="medium" <?php if($opt_val['img_size'] == "medium") echo 'checked="checked"'; ?> />
-          Medium</labeL></td>
-    </tr>
-    <tr>
-      <td><label>
-          <input type="radio" name="<?php echo $opt_name['img_size']; ?>" value="large" <?php if($opt_val['img_size'] == "large") echo 'checked="checked"'; ?> />
-          Large</label></td>
-    </tr>
-    <tr>
-      <td><label>
-          <input type="radio" name="<?php echo $opt_name['img_size']; ?>" value="full" <?php if($opt_val['img_size'] == "full") echo 'checked="checked"'; ?> />
-          Full</label></td>
+      <td>
+          <select name="<?php echo $opt_name['img_size']; ?>">
+          	<option value="thumb" <?php echo ($opt_val['img_size'] == "thumb") ? 'selected="selected"' : ''; ?> >Thumbnails</option>
+            <option value="medium" <?php echo ($opt_val['img_size'] == "medium") ? 'selected="selected"' : ''; ?> >Medium</option>
+            <option value="large" <?php echo ($opt_val['img_size'] == "large") ? 'selected="selected"' : ''; ?> >Large</option>
+            <option value="full" <?php echo ($opt_val['img_size'] == "full") ? 'selected="selected"' : ''; ?> >Full Size</option>
+          </select>
+      </td>
     </tr>
     <tr>
       <th>
@@ -48,7 +38,7 @@
         </label></td>
     </tr>
     <tr>
-    	<th><?php _e("Default Image Path:", 'att_trans_domain'); ?></th>
+    	<th><?php _e("Default Image Path:", 'att_trans_domain'); ?><br /><small>(Must start from blog root)</small></th>
         <td><input type="text" name="<?php echo $opt_name['default_img']; ?>" value="<?php echo $opt_val['default_img']; ?>" /></td>
     </tr>
     <tr>
@@ -62,9 +52,32 @@
             </select>
         </td>
     </tr>
+    <tr>
+    	<th><?php _e("Image Alternate Text:", 'att_trans_domain'); ?></th>
+        <td>
+        	<select name="<?php echo $opt_name['alt']; ?>">
+                <option value="image-name" <?php echo ($opt_val['alt'] == "image-name") ? 'selected="selected"' : ''; ?> >Image Filename</option>
+                <option value="image-description" <?php echo ($opt_val['alt'] == "image-description") ? 'selected="selected"' : ''; ?> >Image Description</option>
+                <option value="post-title" <?php echo ($opt_val['alt'] == "post-title") ? 'selected="selected"' : ''; ?> >Post Title</option>
+                <option value="post-slug" <?php echo ($opt_val['alt'] == "post-slug") ? 'selected="selected"' : ''; ?> >Post Slug</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+    	<th><?php _e("Link Title Text:", 'att_trans_domain'); ?><br/><small>(Works only if link is <strong>not</strong> no link)</small></th>
+        <td>
+        	<select name="<?php echo $opt_name['link_title']; ?>">
+                <option value="image-name" <?php echo ($opt_val['link_title'] == "image-name") ? 'selected="selected"' : ''; ?> >Image Filename</option>
+                <option value="image-description" <?php echo ($opt_val['link_title'] == "image-description") ? 'selected="selected"' : ''; ?> >Image Description</option>
+                <option value="post-title" <?php echo ($opt_val['link_title'] == "post-title") ? 'selected="selected"' : ''; ?> >Post Title</option>
+                <option value="post-slug" <?php echo ($opt_val['link_title'] == "post-slug") ? 'selected="selected"' : ''; ?> >Post Slug</option>
+            </select>
+        </td>
+    </tr>
     </tbody>
   </table>
   <h3><?php _e("Advanced Options", 'att_trans_domain'); ?></h3>
+  <p>The following are advanced options. If you aren't comfortable messing around with them then just leave them. You can actually stop the plugin from working correctly by selecting the wrong option here so please be careful. If you are a seasoned coder or know what you are doing then ignore this &amp; happy hunting.</p>
   <table class="form-table">
   <tbody>
   	<tr>
