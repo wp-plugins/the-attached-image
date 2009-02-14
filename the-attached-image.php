@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.3.2
+Version: 2.3.3
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -118,6 +118,7 @@ function the_attached_image($args='') {
 		
 	parse_str($args); //Tenutive support for the old options method. Please use the options page, it's much neater.
 	
+	
 	if( !isset($img_size) && !get_option('att_img_size') )
 		$img_size = 'thumb';
 	elseif(isset($img_size))
@@ -133,12 +134,16 @@ function the_attached_image($args='') {
 		$css_class = get_option('att_css_class');
 		
 	if( !isset($img_tag) && !get_option('att_img_tag') )
-		$img_tag = true; 
+		$img_tag = true;
+        elseif(isset($img_tag))
+		$img_tag = $img_tag;
 	else 
 		$img_tag = get_option('att_img_tag');
 		
 	if( !isset($echo) && !get_option('att_echo') ) 
-		$echo = true; 
+		$echo = true;
+        elseif(isset($echo))
+		$echo = $echo; 
 	else
 		$echo = get_option('att_echo');
 		
@@ -147,6 +152,14 @@ function the_attached_image($args='') {
 		
 	if( !isset($link) && !get_option('att_href') ) {
 		$link = 'none';
+        } elseif(isset($link)) {
+		$link = $link;
+                
+                if($link != 'none') {
+			$href = true;
+		} else {
+			$href = false;	
+		}
 	} else {
 		$link = get_option('att_href');
 		
@@ -210,6 +223,8 @@ function the_attached_image($args='') {
 	
 	if( !isset($rel) && !get_option('att_href_rel') )
 		$rel = false; 
+        elseif(isset($rel))
+		$rel = $rel;
 	else
 		$rel = get_option('att_href_rel');
 	
