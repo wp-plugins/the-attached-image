@@ -32,9 +32,9 @@
   <p>The Attached Image now comes with an options page so you don't have to get into the nitty gritty of all the complicated code to make it work. Here is a description of what each option does. First the general options:</p>
   <dl>
    <dt><strong><em>Image Size</em></strong></dt>
-   <dd>This is the size of image you would like to use. As of version 2.2 it supports WordPress' generated thumbnails, medium size, large size images, and of course the original full size image.</dd>
+   <dd>This is the size of image you would like to use. As of version 2.2 it supports WordPress' generated thumbnails, medium size, large size images, and of course the original full size image. You can now specify a size using a function call to override the options page. This is great if you want to call the plugin twice on two template pages &amp; want to use different size image. Use <code>img_size=</code> and then either full, large, medium or thumb. Use ampersands (&amp;) to seperate parameters.</dd>
    <dt><strong><em>CSS Class</em></strong></dt>
-   <dd>This is the class that you would like placed in the image tag. The default is <code>attached-image</code> and can be styled as normal through a CSS stylesheet. This option is so anyone who already has a class can use that if they wish.
+   <dd>This is the class that you would like placed in the image tag. The default is <code>attached-image</code> and can be styled as normal through a CSS stylesheet. This option is so anyone who already has a class can use that if they wish. You can also call a different CSS class using function call parameters again options are seperated by ampersands (&amp;). CSS class' parameter is <code>css_class</code> <strong>Don't</strong> use spaces in CSS class names when using this method. An example of both image size &amp; css class together would be this. <code>the_attached_image('img_size=thumb&amp;css_class=custom-class');</code></dd>
    <dt><strong><em>Custom Image Size</em></strong></dt>
    <dd>Here you can input a custom image size. Beware, this uses the inbuilt width &amp; height attributes of the image tag &amp; as such can degrade picture quality if used too aggressively. Please use with caution.</dd>
    <dt><strong><em>Default Image Path</em></strong></dt>

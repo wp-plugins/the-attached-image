@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.3.1
+Version: 2.3.2
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -120,11 +120,15 @@ function the_attached_image($args='') {
 	
 	if( !isset($img_size) && !get_option('att_img_size') )
 		$img_size = 'thumb';
+	elseif(isset($img_size))
+		$img_size = $img_size;
 	else
 		$img_size = get_option('att_img_size');
 		
 	if( !isset($css_class) && !get_option('att_css_class') )
 		$css_class = 'attached-image';
+	elseif(isset($css_class))
+		$css_class = $css_class;
 	else
 		$css_class = get_option('att_css_class');
 		
@@ -150,6 +154,11 @@ function the_attached_image($args='') {
 			$href = true;
 		} else {
 			$href = false;	
+		}
+		
+		if(get_post_meta($post->ID, 'att_custom_link', true) != "") {
+			$href = true;
+			$link = "custom"; //override the link to custom because the custom field is set.
 		}
 		
 	}
@@ -254,27 +263,17 @@ function the_attached_image($args='') {
 		
 		$image = '<img src="'.get_bloginfo('url').$default.'" class="'.$css_class.'" ';
 		
-		//Figure out the alt value for the default image
-		switch($alt) {
-			case 'image-description' :
-			case 'image-name' :
-				$parts = pathinfo($default);
-				$alt_text = $parts['filename'];
-			break;
-			case 'post-title' :
-				$alt_text = $post->post_title;
-			break;
-			case 'post-slug' :
-				$alt_text = $post->post_name;
-			break;
-			case 'custom' :
-				//if it doesn't match any of those it must be custom.
-				$alt_text = str_replace('"', '', get_post_meta($post->ID, 'att_custom_alt', true));
-			break;
+		//get the alt text
+		$alt_text = get_alt($alt);
+		if(!empty($alt_text)) {
+			$image .= 'alt="'.$alt_text.'"' ;
 		}
 		
-		if(!empty($alt_text))
-			$image .= 'alt="'.$alt_text.'"';
+		if(stristr($link, 'post') === false || stristr($link, 'custom') === false) {
+			//get the title text
+			$img_title_text = get_title($link_title);
+			$image .= 'title="'.$img_title_text.'" ';
+		}
 		
 		if($height === false && $width === false) { //Sort out the height & width depending on what has been supplied by the user.
 			//Get the image size using ABSPATH. Suppresion of errors via @ is not expensive despite what you have heard. It's the generation of the error.
@@ -288,12 +287,6 @@ function the_attached_image($args='') {
 			} elseif(!$height === false) {
 				$image .= 'height="'.$height.'" />';
 			}
-		}
-		
-		//This is a copy of the link maker further down the page. I'll clean it up in a later version, this should do unitl then.
-		if(get_post_meta($post->ID, 'att_custom_link', true) != "") {
-				$href = true;
-				$link = "custom"; //override the link to custom because the custom field is set.
 		}
 		
 		if($href === true || $href == 'true') { //Do you want a href & where should it point.
@@ -371,28 +364,15 @@ function the_attached_image($args='') {
 		if($img_tag === true || $img_tag == 'true') { //Do they want an image tag along with setting the height & width.
 			$image = '<img src="'.$img_url.'" class="'.$css_class.'"';
 			
-			//Figure out the alt value for the proper image.
-			switch($alt) {
-				case 'image-name' :
-					$alt_text = $attachment->post_title;
-				break;
-				case 'image-description' :
-					$alt_text = (!empty($attachment->post_content)) ? $attachment->post_content : $attachment->post_title;
-				break;
-				case 'post-title' :
-					$alt_text = $post->post_title;
-				break;
-				case 'post-slug' :
-					$alt_text = $post->post_name;
-				break;
-				case 'custom' :
-					//if it doesn't match any of those it must be custom.
-					$alt_text = str_replace('"', '', get_post_meta($post->ID, 'att_custom_alt', true));
-				break;
-			}
-		
-			if(!empty($alt_text))
+			get_alt($alt); //Get alt text		
+			if(!empty($alt_text)) {
 				$image .= ' alt="'.$alt_text.'"';
+			}
+			
+			if(stristr($link, 'none')) {
+				$title_text = get_title($link_title);
+				$image .= ' title="'.$title_text.'"';
+			}
 			
 			if(!$width === false && !$height === false) {
 				$image .= ' width="'.$width.'" height="'.$height.'" />'; 
@@ -405,42 +385,10 @@ function the_attached_image($args='') {
 			$image = $img_url;
 		}
 		
-		if(get_post_meta($post->ID, 'att_custom_link', true) != "") {
-				$href = true;
-				$link = "custom"; //override the link to custom because the custom field is set.
-		}
-		
 		if($href === true || $href == 'true') { //Do you want a href & where should it point.
 			//First lets figure out what title text they want...
 			
-			switch($link_title) {
-				case 'image-name' :
-					if(!empty($attachment->post_title)) {//if this is a default image we won't be able to use the $attachments object
-						$a_title_text = $attachment->post_title; 
-					} else {
-						$parts = pathinfo($default); //use the filename instead
-						$a_title_text = $parts['filename'];
-					}
-				break;
-				case 'image-description' :
-					if(empty($attachment->post_content) && empty($attachment->post_title)) { //If we cant find both then it's the default again
-						$parts = pathinfo($default); //use the filename instead
-						$a_title_text = $parts['filename'];
-					} else {
-						$a_title_text = (!empty($attachment->post_content)) ? $attachment->post_content : $attachment->post_title;
-					}
-				break;
-				case 'post-title' :
-					$a_title_text = $post->post_title;
-				break;
-				case 'post-slug' :
-					$a_title_text = $post->post_name;
-				break;
-				case 'custom' :
-					//if it doesn't match any of those it must be custom.
-					$a_title_text = str_replace('"', '', get_post_meta($post->ID, 'att_custom_link_title', true));
-				break;
-			}
+			$a_title_text = get_title($link_title);
 			
 			switch ($link) {
 				case 'post' :
@@ -475,4 +423,73 @@ function the_attached_image($args='') {
 	
 }
 
+function get_title($link_title) {
+	global $attachment, $default, $post;
+
+	switch($link_title) {
+		case 'image-name' :
+			if(!empty($attachment->post_title)) {//if this is a default image we won't be able to use the $attachments object
+				$title_text = $attachment->post_title; 
+			} else {
+				$parts = pathinfo($default); //use the filename instead
+				$title_text = $parts['filename'];
+			}
+		break;
+		case 'image-description' :
+			if(empty($attachment->post_content) && empty($attachment->post_title)) { //If we cant find both then it's the default again
+				$parts = pathinfo($default); //use the filename instead
+				$title_text = $parts['filename'];
+			} else {
+				$title_text = (!empty($attachment->post_content)) ? $attachment->post_content : $attachment->post_title;
+			}
+		break;
+		case 'post-title' :
+			$title_text = $post->post_title;
+		break;
+		case 'post-slug' :
+			$title_text = $post->post_name;
+		break;
+		case 'custom' :
+			//if it doesn't match any of those it must be custom.
+			$title_text = str_replace('"', '', get_post_meta($post->ID, 'att_custom_link_title', true));
+		break;
+	}	
+	  
+	return $title_text;
+}
+
+function get_alt($alt) {
+	global $attachment, $default, $post;
+	
+	switch($alt) {
+		case 'image-name' :
+			if(empty($attachment->post_title)) {
+				$parts = pathinfo($default);
+				$alt_text = $parts['filename'];
+			} else {
+				$alt_text = $attachment->post_title;
+			}
+		break;
+		case 'image-description' :
+			if(empty($attachment->post_content) && empty($attachment->post_title)) { //If we cant find both then it's the default again
+				$parts = pathinfo($default); //use the filename instead
+				$alt_text = $parts['filename'];
+			} else {
+				$alt_text = (!empty($attachment->post_content)) ? $attachment->post_content : $attachment->post_title;
+			}
+		break;
+		case 'post-title' :
+			$alt_text = $post->post_title;
+		break;
+		case 'post-slug' :
+			$alt_text = $post->post_name;
+		break;
+		case 'custom' :
+			//if it doesn't match any of those it must be custom.
+			$alt_text = str_replace('"', '', get_post_meta($post->ID, 'att_custom_alt', true));
+		break;
+	}
+	
+	return $alt_text;
+}
 ?>

@@ -1,3 +1,10 @@
+V 2.3.2:
+Added parameters back in for CSS class and img size so
+multiple calls to the function can be customised
+since the options page acts as global.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.3.1:
 Stupid fixes that I can't believe I had to do. I'm crap sometimes.
 
