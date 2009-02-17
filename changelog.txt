@@ -1,3 +1,9 @@
+V 2.3.4:
+Fixed stupid mistake. Forgot to return to variable in alt text
+also made mistake in if logic for default title/alt.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.3.3:
 Added more function customisation parameters.
 
