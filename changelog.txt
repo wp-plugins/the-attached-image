@@ -1,4 +1,10 @@
 V 2.3.4:
+Fixed another stupid mistake. Forgot space after default images alt text.
+Thanks to rougedeals.com for the spot.
+
+~~~~~~~~~~~~~~~~~~~~
+
+V 2.3.4:
 Fixed stupid mistake. Forgot to return to variable in alt text
 also made mistake in if logic for default title/alt.
 
