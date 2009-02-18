@@ -1,4 +1,9 @@
-V 2.3.4:
+V 2.5:
+Added legacy support to all parameters & added documentation to cover useage.
+
+~~~~~~~~~~~~~~~~~~~~
+
+V 2.3.5:
 Fixed another stupid mistake. Forgot space after default images alt text.
 Thanks to rougedeals.com for the spot.
 

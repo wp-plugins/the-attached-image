@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.3.5
+Version: 2.4
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -135,14 +135,14 @@ function the_attached_image($args='') {
 		
 	if( !isset($img_tag) && !get_option('att_img_tag') )
 		$img_tag = true;
-        elseif(isset($img_tag))
+    elseif(isset($img_tag))
 		$img_tag = $img_tag;
 	else 
 		$img_tag = get_option('att_img_tag');
 		
 	if( !isset($echo) && !get_option('att_echo') ) 
 		$echo = true;
-        elseif(isset($echo))
+    elseif(isset($echo))
 		$echo = $echo; 
 	else
 		$echo = get_option('att_echo');
@@ -152,10 +152,10 @@ function the_attached_image($args='') {
 		
 	if( !isset($link) && !get_option('att_href') ) {
 		$link = 'none';
-        } elseif(isset($link)) {
+    } elseif(isset($link)) {
 		$link = $link;
                 
-                if($link != 'none') {
+        if($link != 'none') {
 			$href = true;
 		} else {
 			$href = false;	
@@ -178,6 +178,8 @@ function the_attached_image($args='') {
 	
 	if( !isset($alt) && !get_option('att_alt') ) {
 		$alt = 'image-name'; 
+	} elseif(isset($alt)) {
+		$alt = $alt;
 	} else {
 		if(get_post_meta($post->ID, 'att_custom_alt', true)) {
 			$alt = 'custom';
@@ -188,6 +190,8 @@ function the_attached_image($args='') {
 		
 	if( !isset($link_title) && !get_option('att_link_title') ) {
 		$link_title = 'image-name'; 
+	} elseif(isset($link_title)) {
+		$link_title = $link_title;
 	} else {
 		if(get_post_meta($post->ID, 'att_custom_link_title', true)) {
 			$link_title = 'custom';
@@ -198,21 +202,32 @@ function the_attached_image($args='') {
 	
 	if( !isset($default) && !get_option('att_default_img') )
 		$default = false;
+	elseif(isset($default))
+		$default = $default;
 	else 
 		$default = get_option('att_default_img');
 		
 	if( !isset($width) && !get_option('att_img_width'))
 		$width = false;
+	elseif(isset($width))
+		$width = $width;
 	else
 		$width = get_option('att_img_width');
 		
 	if( !isset($height) && !get_option('att_img_height'))
 		$height = false;
+	elseif(isset($height))
+		$height = $height;
 	else 
 		$height = get_option('att_img_height');
 		
 	if( !isset($image_order) && !get_option('att_img_order') ) {
 		$image_order = 1;
+	} elseif(isset($image_order)) {
+		if(is_numeric($image_order))
+			$image_order = intval($image_order);
+		else
+			$image_order = 1;
 	} else {
 		$image_order = get_option('att_img_order');
 		if(is_numeric($image_order))
@@ -223,7 +238,7 @@ function the_attached_image($args='') {
 	
 	if( !isset($rel) && !get_option('att_href_rel') )
 		$rel = false; 
-        elseif(isset($rel))
+    elseif(isset($rel))
 		$rel = $rel;
 	else
 		$rel = get_option('att_href_rel');
