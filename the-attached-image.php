@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.4.1
+Version: 2.4.2
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -45,7 +45,7 @@ function att_options_page() {
     $opt_val = array('img_size' => get_option( $opt_name['img_size'] ),
 					 'css_class' => get_option( $opt_name['css_class'] ),
 					 'img_width' => get_option( $opt_name['img_width'] ),
-					 'img_height' => get_option( $opt_name['img_width'] ),
+					 'img_height' => get_option( $opt_name['img_height'] ),
 					 'default_img' => get_option( $opt_name['default_img'] ),
 					 'href' => get_option( $opt_name['href'] ),
 					 'alt' => get_option( $opt_name['alt'] ),
