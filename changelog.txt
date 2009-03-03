@@ -1,3 +1,8 @@
+V 2.4.4:
+Added getimagesize for external servers.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.4.3:
 Added in_post_image feature for Jake Garrison & fixed changelog numbers.
 
