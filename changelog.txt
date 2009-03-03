@@ -1,14 +1,19 @@
-V 2.5.2:
+V 2.4.3:
+Added in_post_image feature for Jake Garrison & fixed changelog numbers.
+
+~~~~~~~~~~~~~~~~~~~~
+
+V 2.4.2:
 Minor bug fix. Silly mistake on options page. Marked height as width on options.
 
 ~~~~~~~~~~~~~~~~~~~~
 
-V 2.5.1:
+V 2.4.1:
 Minor bug fix. Width & Height if logic.
 
 ~~~~~~~~~~~~~~~~~~~~
 
-V 2.5:
+V 2.4:
 Added legacy support to all parameters & added documentation to cover useage.
 
 ~~~~~~~~~~~~~~~~~~~~

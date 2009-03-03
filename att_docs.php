@@ -74,6 +74,8 @@
   <dd>Allows you to chose a custom alt attibute to be placed in the image tag.</dd>
   <dt><strong>Key:</strong> <em>att_custom_link_title</em></dt>
   <dd>Allows you to chose a custom title attribute to be placed in the hyperlink. Only has an effect if Link Image Location is <strong>NOT</strong> set to No Link.</dd>
+  <dt><strong>Key:</strong> <em>att_in_post_image</em></dt>
+  <dd>This feature was requested by Jake Garrison. It allows you to display an image that is inserted into the post &amp; not attached via the WP uploader. It scans for img tags in the post and places it where ever you place the plugin call. Options are a number starting from 1 of the img tag you wish to pic from the post. 1 will pic the first, 2 will pic the second and so on. If there isn't a img tag matches the number picked it will leave a blank space (return false). Example. If you choose 4 and there are only 3 images in the post in will return blank (return false).</dd>
 </dl>
 <h3>More Questions?</h3>
 <p>Then drop by <a href="http://return-true.com/2008/12/wordpress-plugin-the-attached-image/" title="Home of The Attached Image Plugin">Return True</a> and leave a comment and I will get back to you with an answer ASAP.</p>
@@ -114,4 +116,6 @@
 <dd>Allows you to choose what the default alternate text for the image should be. You can choose either image filename, image description, post title or post slug. The description is taken from the description field that you can fill in when uploading an image via WordPress’ uploader. If one isn’t provided it falls back to the images filename. A custom value may be input via custom fields, see Custom Field Info above.</dd>
 <dt><code>title_link</code></dt>
 <dd>This is the text placed in the title attribute of the hyperlink placed around the image. This will only have an effect if you do <strong>NOT</strong> have Image Link Location set to No Link. The options are the same as the alternated text &amp; a custom value can be input via custom fields, see Custom Field Info above.</dd>
+<dt><code>in_post_image</code></dt>
+<dd>This feature was requested by Jake Garrison. It allows you to display an image that is inserted into the post &amp; not attached via the WP uploader. It scans for img tags in the post and places it where ever you place the plugin call. Options are a number starting from 1 of the img tag you wish to pic from the post. 1 will pic the first, 2 will pic the second and so on. If there isn't a img tag matches the number picked it will leave a blank space (return false). Example. If you choose 4 and there are only 3 images in the post in will return blank (return false). Can also be set via the custom fields, without setting this parameter using the key above. <strong>Warning:</strong> This will override the normal function of this plugin if set as a parameter. If you use custom fields the plugin will work as normal except for the posts it is used on.</dd>
 </dl>

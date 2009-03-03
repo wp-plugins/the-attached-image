@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.4.2
+Version: 2.4.3
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -242,6 +242,13 @@ function the_attached_image($args='') {
 		$rel = $rel;
 	else
 		$rel = get_option('att_href_rel');
+		
+	if( !isset($in_post_image) && get_post_meta($post->ID, 'att_in_post_image', true) == "")
+		$in_post_image = false;
+	elseif(isset($in_post_image))
+		$in_post_image = $in_post_image;
+	else
+		$in_post_image = get_post_meta($post->ID, 'att_in_post_image', true);
 	
 	if($custom_img_meta = get_post_meta($post->ID, 'att_custom_img', true)) {
 			$attachments = array(get_post($custom_img_meta));
@@ -249,10 +256,62 @@ function the_attached_image($args='') {
 	} else {
 			$custom_img = false;	
 	}
-	
+		
 	//If WP's post array is empty we can't do anything but only if a custom image hasn't been set.
 	if(empty($post) && $custom_img === false && get_post_meta($post->ID, 'att_default_pic', true) == "")
 		return false;
+			
+	if($in_post_image != false) {
+		
+		$image_cache = array();
+		
+		preg_match_all("/<img[^']*?src=\"([^']*?)\"[^']*?>/", $post->post_content, $matches, PREG_PATTERN_ORDER);
+		
+		$image_cache = $matches[1];
+		
+		--$in_post_image;
+		
+		if($in_post_image < count($image_cache)) {
+			
+			$img_url = $image_cache[$in_post_image];
+			
+		} else {
+			
+			return false;
+		
+		}
+		
+		$img_url = urldecode($img_url);
+				
+		if(stristr($img_url, $_SERVER['HTTP_HOST'])) {
+			$img_full_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $img_url);
+			
+			
+			if(file_exists($img_full_path)) {
+				$imagesize = @getimagesize($img_full_path);
+			} else {	
+				$imagesize = array();
+			}
+			
+		} else {
+			//if the image is off site we must set these to stop PHP from taking a ragie.
+			$imagesize = array('','','','');
+		}
+		
+		$info = array('title' => $post->post_title,
+					  'url' => $img_url,
+					  'size' => $imagesize[3],
+					  'width' => $imagesize[0],
+					  'height' => $imagesize[1],
+					  'type' => $imagesize[2]
+					  );
+		
+		$image_output = '<img class="' . $css_class . '" src="' . $info['url'] . '" ' . $info['size'] . ' title="' . $info['title'] . '" alt="' . $info['title'] . '" />';
+		
+		echo $image_output;
+		return true;
+		
+	}
 	
 	if($custom_img === false) {
 		//Get the attachments for the current post. Limit to one and order by the menu_order so that the image shown can be changed by the WP gallery.
