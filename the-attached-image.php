@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.4.4
+Version: 2.4.5
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -357,15 +357,18 @@ function the_attached_image($args='') {
 		$image = '<img src="'.get_bloginfo('url').$default.'" class="'.$css_class.'" ';
 		
 		//get the alt text
-		$alt_text = get_alt($alt);
+		$attachment = '';
+		$alt_text = get_alt($alt, $attachment, $default);
 		if(!empty($alt_text)) {
 			$image .= 'alt="'.$alt_text.'" ' ;
 		}
 				
 		if(stristr($link, 'post') === false && stristr($link, 'custom') === false) {
 			//get the title text
-			$img_title_text = get_title($link_title);
-			$image .= 'title="'.$img_title_text.'" ';
+			$img_title_text = get_title($link_title, $attachment, $default);
+			if(!empty($title_text)) {
+				$image .= 'title="'.$img_title_text.'" ';
+			}
 		}
 		
 		if($height === false && $width === false) { //Sort out the height & width depending on what has been supplied by the user.
@@ -457,14 +460,16 @@ function the_attached_image($args='') {
 		if($img_tag === true || $img_tag == 'true') { //Do they want an image tag along with setting the height & width.
 			$image = '<img src="'.$img_url.'" class="'.$css_class.'"';
 			
-			$alt_text = get_alt($alt); //Get alt text
+			$alt_text = get_alt($alt, $attachment, $default); //Get alt text
 			if(!empty($alt_text)) {
 				$image .= ' alt="'.$alt_text.'"';
 			}
 			
 			if(stristr($link, 'none')) {
-				$title_text = get_title($link_title);
-				$image .= ' title="'.$title_text.'"';
+				$title_text = get_title($link_title, $attachment, $default);
+				if(!empty($title_text)) {
+					$image .= ' title="'.$title_text.'"';
+				}
 			}
 			
 			if(!$width === false && !$height === false) {
@@ -483,7 +488,7 @@ function the_attached_image($args='') {
 		if($href === true || $href == 'true') { //Do you want a href & where should it point.
 			//First lets figure out what title text they want...
 			
-			$a_title_text = get_title($link_title);
+			$a_title_text = get_title($link_title, $attachment, $default);
 			
 			switch ($link) {
 				case 'post' :
@@ -518,8 +523,8 @@ function the_attached_image($args='') {
 	
 }
 
-function get_title($link_title) {
-	global $attachment, $default, $post;
+function get_title($link_title, $attachment, $default) {
+	global $post;
 
 	switch($link_title) {
 		case 'image-name' :
@@ -553,8 +558,8 @@ function get_title($link_title) {
 	return $title_text;
 }
 
-function get_alt($alt) {
-	global $attachment, $default, $post;
+function get_alt($alt, $attachment, $default) {
+	global $post;
 	
 	switch($alt) {
 		case 'image-name' :
