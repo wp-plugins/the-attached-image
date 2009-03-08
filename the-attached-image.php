@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.4.7
+Version: 2.4.8
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -27,7 +27,9 @@ function att_add_options() {
 
 function att_options_page() {
     // variables for the field and option names 
-    $opt_name = array('img_size' =>'att_img_size',
+    $opt_name = array('function' => 'att_function',
+					  'function_number' => 'att_function_number',
+					  'img_size' =>'att_img_size',
 					  'css_class' => 'att_css_class',
 					  'img_width' => 'att_img_width',
 					  'img_height' => 'att_img_height',
@@ -42,7 +44,9 @@ function att_options_page() {
     $hidden_field_name = 'att_submit_hidden';
 
     // Read in existing option value from database
-    $opt_val = array('img_size' => get_option( $opt_name['img_size'] ),
+    $opt_val = array('function' => get_option( $opt_name['function'] ),
+					 'function_number' => get_option( $opt_name['function_number'] ),
+					 'img_size' => get_option( $opt_name['img_size'] ),
 					 'css_class' => get_option( $opt_name['css_class'] ),
 					 'img_width' => get_option( $opt_name['img_width'] ),
 					 'img_height' => get_option( $opt_name['img_height'] ),
@@ -59,7 +63,12 @@ function att_options_page() {
     // If they did, this hidden field will be set to 'Y'
     if(isset($_POST[ $hidden_field_name ]) && $_POST[ $hidden_field_name ] == 'Y' ) {
         // Read their posted value
-        $opt_val = array('img_size' => $_POST[ $opt_name['img_size'] ],
+		if(!isset($_POST[ $opt_name['function'] ]))
+			$_POST[ $opt_name['function'] ] = 'false';
+			
+        $opt_val = array('function' => $_POST[ $opt_name['function'] ],
+						 'function_number' => $_POST[ $opt_name['function_number'] ],
+						 'img_size' => $_POST[ $opt_name['img_size'] ],
 						 'css_class' => $_POST[ $opt_name['css_class'] ],
 						 'img_width' => $_POST[ $opt_name['img_width'] ],
 						 'img_height' => $_POST[ $opt_name['img_height'] ],
@@ -73,6 +82,8 @@ function att_options_page() {
 						 'img_order' => $_POST[ $opt_name['img_order'] ]);
 
         // Save the posted value in the database
+		update_option( $opt_name['function'], $opt_val['function'] );
+		update_option( $opt_name['function_number'], $opt_val['function_number'] );
         update_option( $opt_name['img_size'], $opt_val['img_size'] );
 		update_option( $opt_name['css_class'], $opt_val['css_class'] );
 		update_option( $opt_name['img_width'], $opt_val['img_width'] );
@@ -120,7 +131,11 @@ function the_attached_image($args='') {
 		
 	parse_str($args); //Tenutive support for the old options method. Please use the options page, it's much neater.
 	
-	
+	if( get_option('att_function') == "true") {
+		$in_post_override['status'] = true;
+		$in_post_override['value'] = get_option('att_function_number');
+	}
+		
 	if( !isset($img_size) && !get_option('att_img_size') )
 		$img_size = 'thumb';
 	elseif(isset($img_size))
@@ -251,6 +266,9 @@ function the_attached_image($args='') {
 		$in_post_image = $in_post_image;
 	else
 		$in_post_image = get_post_meta($post->ID, 'att_in_post_image', true);
+		
+	if(isset($in_post_override) && $in_post_override['status'] === true)
+		$in_post_image = $in_post_override['value'];
 	
 	if($custom_img_meta = get_post_meta($post->ID, 'att_custom_img', true)) {
 			$attachments = array(get_post($custom_img_meta));
@@ -279,7 +297,8 @@ function the_attached_image($args='') {
 			
 		} else {
 			
-			return false;
+			echo create_default_image($link, $link_title, $width, $height, $href, $post, $default, $css_class, $alt);
+			return;
 		
 		}
 		
@@ -370,58 +389,13 @@ function the_attached_image($args='') {
 	// ^^ Check for custom fields. To stop function call follow through we need to cancel out the $width or the $height if only one has been set by meta.
 	
 	if(empty($attachments)) { //If attachments is empty then we should check for a default image via meta or via function call.
-		if($pic_meta = get_post_meta($post->ID, 'att_default_pic', true)) {
-			$default = $pic_meta;
-		} elseif($default === false) {
+		
+		$image = create_default_image($link, $link_title, $width, $height, $href, $post, $default, $css_class, $alt);
+		
+		if($image === false)
 			return false;
-		}
-		
-		$image = '<img src="'.get_bloginfo('url').$default.'" class="'.$css_class.'" ';
-		
-		//get the alt text
-		$attachment = '';
-		$alt_text = get_alt($alt, $attachment, $default);
-		if(!empty($alt_text)) {
-			$image .= 'alt="'.$alt_text.'" ' ;
-		}
-				
-		if(stristr($link, 'post') === false && stristr($link, 'custom') === false) {
-			//get the title text
-			$img_title_text = get_title($link_title, $attachment, $default);
-			if(!empty($title_text)) {
-				$image .= 'title="'.$img_title_text.'" ';
-			}
-		}
-		
-		if($height === false && $width === false) { //Sort out the height & width depending on what has been supplied by the user.
-			//Get the image size using ABSPATH. Suppresion of errors via @ is not expensive despite what you have heard. It's the generation of the error.
-			$default_info = @getimagesize(substr(ABSPATH,0,-1).$default); 
-			$image .= !empty($default_info[3]) ? $default_info[3].' />' : ' />'; 
-		} else {
-			if(!$width === false && !$height === false) {
-				$image .= 'width="'.$width.'" height="'.$height.'" />'; 
-			} elseif(!$width === false) {
-				$image .= 'width="'.$width.'" />';
-			} elseif(!$height === false) {
-				$image .= 'height="'.$height.'" />';
-			}
-		}
-		
-		if($href === true || $href == 'true') { //Do you want a href & where should it point.
-			switch ($link) {
-				case 'post' :
-					$a_href = '<a href="'.get_permalink($post->ID).'" title="'.$post->post_title.'">%%%</a>';
-				break;
-				case 'custom' :
-					$link_meta = get_post_meta($post->ID, 'att_custom_link', true); //no need to check since it wouldn't be here if it were empty.
-					$a_href = '<a href="'.$link_meta.'">%%%</a>';
-				break;
-			}
-		}
-		
-		if(isset($a_href) && !empty($a_href)) { //If they wanted a link put the img tag into it.
-			$image = str_replace('%%%', $image, $a_href);
-		}
+		elseif(empty($image))
+			unset($image);
 		
 	}
 	
@@ -542,6 +516,65 @@ function the_attached_image($args='') {
 		echo $image;
 	else //Ok we'll return it instead.
 		return $image;
+	
+}
+
+function create_default_image($link, $link_title, $width, $height, $href, $post, $default, $css_class, $alt) {
+	
+	if($pic_meta = get_post_meta($post->ID, 'att_default_pic', true)) {
+		$default = $pic_meta;
+	} elseif($default === false) {
+		return false;
+	}
+	
+	$image = '<img src="'.get_bloginfo('url').$default.'" class="'.$css_class.'" ';
+	
+	//get the alt text
+	$attachment = '';
+	$alt_text = get_alt($alt, $attachment, $default);
+	if(!empty($alt_text)) {
+		$image .= 'alt="'.$alt_text.'" ' ;
+	}
+			
+	if(stristr($link, 'post') === false && stristr($link, 'custom') === false) {
+		//get the title text
+		$img_title_text = get_title($link_title, $attachment, $default);
+		if(!empty($title_text)) {
+			$image .= 'title="'.$img_title_text.'" ';
+		}
+	}
+	
+	if($height === false && $width === false) { //Sort out the height & width depending on what has been supplied by the user.
+		//Get the image size using ABSPATH. Suppresion of errors via @ is not expensive despite what you have heard. It's the generation of the error.
+		$default_info = @getimagesize(substr(ABSPATH,0,-1).$default); 
+		$image .= !empty($default_info[3]) ? $default_info[3].' />' : ' />'; 
+	} else {
+		if(!$width === false && !$height === false) {
+			$image .= 'width="'.$width.'" height="'.$height.'" />'; 
+		} elseif(!$width === false) {
+			$image .= 'width="'.$width.'" />';
+		} elseif(!$height === false) {
+			$image .= 'height="'.$height.'" />';
+		}
+	}
+	
+	if($href === true || $href == 'true') { //Do you want a href & where should it point.
+		switch ($link) {
+			case 'post' :
+				$a_href = '<a href="'.get_permalink($post->ID).'" title="'.$post->post_title.'">%%%</a>';
+			break;
+			case 'custom' :
+				$link_meta = get_post_meta($post->ID, 'att_custom_link', true); //no need to check since it wouldn't be here if it were empty.
+				$a_href = '<a href="'.$link_meta.'">%%%</a>';
+			break;
+		}
+	}
+	
+	if(isset($a_href) && !empty($a_href)) { //If they wanted a link put the img tag into it.
+		$image = str_replace('%%%', $image, $a_href);
+	}
+		
+	return $image;
 	
 }
 

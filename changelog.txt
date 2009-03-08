@@ -1,3 +1,9 @@
+V 2.4.8:
+Added a checkbox in options to turn off & on perma functionality for
+in post image.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.4.7:
 Changed $post to $wp_query->post to allow for the use
 of query_posts. Updates $post to the latest query no

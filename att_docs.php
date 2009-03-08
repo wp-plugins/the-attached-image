@@ -29,6 +29,8 @@
   <li>Go to the 'The Attached Image' options page under the WordPress Appearence menu.</li>
 </ol>
 <h3>Options</h3>
+<h4>Functionality Options</h4>
+<p>This options allows you to switch on and off the perma functionality for in post image. This checks the post content for an image and grabs the image with the number you have asked for. If that number of image is not available it will show your specified default or return with nothing. Just press the checkbox &amp; put in a number. It starts at 1 not 0 like some may think, so if you want to get the first image in the post press the checkbox &amp; type 1 then save. This type of functionality can also be accessed on a post per post basis using the custom fields as explained later in this documentation.</p>
 <h4>General Options</h4>
 <p>The Attached Image now comes with an options page so you don't have to get into the nitty gritty of all the complicated code to make it work. Here is a description of what each option does. First the general options:</p>
 <dl>

@@ -1,6 +1,20 @@
 <p><a href="<?php echo preg_replace('/&wpatt-page=[^&]*/', '', $_SERVER['REQUEST_URI']) . '&wpatt-page=docs'; ?>" title="Check the documentation, it's always a good idea!">Read the documentation</a></p>
 <form name="att_img_options" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
   <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
+  <h3>Functionality</h3>
+  <p>This new feature allows you to choose between the two main functions of The Attached Image. Leave the checkbox off to use it as normal, which is to grab the first attached image from the current post. If you turn on the checkbox the plugin will instead use the nth numbered image tag from the post content, where n is the number placed in the box that appears to the right of the checkbox.</p>
+  <table class="form-table">
+  <tbody>
+  <tr>
+  	<th valign="top">
+    	<?php _e("Pick Functionality", 'att_trans_domain' ); ?>
+    </th>
+    <td>
+    	<label>Turn On In Post Image Functionality: <input type="checkbox" value="true" name="<?php echo $opt_name['function']; ?>" <?php echo (isset($opt_val['function']) && $opt_val['function'] == "true") ? 'checked="checked"' : ''; ?>  /></label>&nbsp;&nbsp;&nbsp;&nbsp;<input id="function_number" type="text" name="<?php echo $opt_name['function_number']; ?>" value="<?php echo $opt_val['function_number']; ?>" />
+    </td>
+  </tr>
+  </tbody>
+  </table>
   <h3>General Options</h3>
   <p>These are the basic options. They set what size image to use, if a default image should be set &amp; a few other things. Please check the <a href="<?php echo preg_replace('/&wpatt-page=[^&]*/', '', $_SERVER['REQUEST_URI']) . '&wpatt-page=docs'; ?>" title="Check the documentation, it's always a good idea!">documentation</a> before playing with any of the options shown on this page.</p>
   <table class="form-table">
