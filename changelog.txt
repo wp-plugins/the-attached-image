@@ -1,3 +1,9 @@
+V 2.4.9:
+Added have_attached_image() for checking if attached image is
+available.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.4.8:
 Added a checkbox in options to turn off & on perma functionality for
 in post image.

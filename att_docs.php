@@ -1,4 +1,3 @@
-
 <p><a href="<?php echo preg_replace('/&wpatt-page=[^&]*/', '', $_SERVER['REQUEST_URI']); ?>">&laquo; Back to options page</a></p>
 <h3>Goal</h3>
 <p>The Attached Image is a simple plugin that packs quite a punch. It shows the first image attached to the current post. It was inspired by a plugin wrote by Kaf Oseo, but when support was stopped &amp; a recent upgrade of WordPress meant it didn't work exactly like it used to I decided to take on the challenge of remaking it using the new WordPress functions available.</p>
@@ -121,3 +120,6 @@
 <dt><code>in_post_image</code></dt>
 <dd>This feature was requested by Jake Garrison. It allows you to display an image that is inserted into the post &amp; not attached via the WP uploader. It scans for img tags in the post and places it where ever you place the plugin call. Options are a number starting from 1 of the img tag you wish to pic from the post. 1 will pic the first, 2 will pic the second and so on. If there isn't a img tag matches the number picked it will leave a blank space (return false). Example. If you choose 4 and there are only 3 images in the post in will return blank (return false). Can also be set via the custom fields, without setting this parameter using the key above. <strong>Warning:</strong> This will override the normal function of this plugin if set as a parameter. If you use custom fields the plugin will work as normal except for the posts it is used on.</dd>
 </dl>
+<h3>Experimental Features</h3>
+<p>A new feature that checks to see if an attached image is available can now be used. It will return false if no attachment is available &amp; true if there is one available. This is a brand new feature and might have bugs so please report any you find to return-true.com or pablorobinson[at]gmail[dot]com.</p>
+<p>To use it just use <code>have_attached_image()</code>.</p>
