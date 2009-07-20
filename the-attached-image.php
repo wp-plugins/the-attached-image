@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.5
+Version: 2.5.1
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -20,6 +20,8 @@ Author URI: http://return-true.com
 /* Before we start let's make the options page in the WP admin */
 
 add_action('admin_menu', 'att_add_options');
+add_action('rss1_item', 'attached_image_rss');
+add_action('rss2_item', 'attached_image_rss');
 
 function att_add_options() {
 	add_theme_page('The Attached Image Options', 'The Attached Image', 8, 'attachedoptions', 'att_options_page');	
@@ -549,6 +551,54 @@ function have_attached_image() {
 		return true;
 		
 	}
+	
+}
+
+function attached_image_rss() {
+	global $post;
+	
+	//If WP's post array is empty we can't do anything but only if a custom image hasn't been set.
+	if(empty($post))
+		return false;
+		
+	//Get the attachments for the current post. Limit to one and order by the menu_order so that the image shown can be changed by the WP gallery.
+	if(function_exists('wp_enqueue_style')) {
+		$attachments = get_children(array('post_parent' => $post->ID,
+										  'post_status' => 'inherit',
+										  'post_type' => 'attachment',
+										  'post_mime_type' => 'image',
+										  'order' => 'ASC',
+										  'orderby' => 'menu_order ID'));
+	} else { 
+		//WP2.5 Compat...
+		$attachments = get_children('post_parent='.$post->ID.'&post_type=attachment&post_mime_type=image&orderby="menu_order ASC, ID ASC"');
+	};
+	  
+	  
+	$i = 0;
+	
+	foreach($attachments as $id => $attachment) :
+		$i++;
+		if($i == $image_order) :
+			$attachment = $attachment;
+			break;
+		endif;
+	endforeach;
+
+
+	//$attachment = current($attachments);
+
+	$img_url = wp_get_attachment_url($attachment->ID); //Get URL to attachment
+	
+	$split_pos = strpos($img_url, 'wp-content');
+	$split_len = (strlen($img_url) - $split_pos);
+	$abs_img_url = substr($img_url, $split_pos, $split_len);
+	
+	$filesize = filesize(ABSPATH.$abs_img_url);   
+	
+	
+
+	echo "<enclosure url='".$img_url."' length ='".$filesize."'  type='image/jpg' />";
 	
 }
 
