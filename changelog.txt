@@ -1,3 +1,8 @@
+V 2.5.2:
+Added a fix for return/echo support on in_post_image & added a suggestion from Nick Benson to link to large images if they exist.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.5.1:
 Added enclosure support to show the first attached image as a media file in WP RSS & RSS2 feeds.
 

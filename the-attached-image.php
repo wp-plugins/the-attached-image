@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.5.1
+Version: 2.5.2
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -359,9 +359,12 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 		
 		$image_output = '<img class="' . $css_class . '" src="' . $info['url'] . '" ' . $info['size'] . ' title="' . $info['title'] . '" alt="' . $info['title'] . '" />';
 		
-		echo $image_output;
-		return true;
-		
+		if($echo === true || $echo == 'true') {
+			echo $image_output;
+			return true;
+		} else {
+			return $image_output;
+		}
 	}
 	
 	if($custom_img === false) {
@@ -503,6 +506,15 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 					$link_meta = get_post_meta($post->ID, 'att_custom_link', true); //no need to check since it wouldn't be here if it were empty.
 					$a_href = '<a href="'.$link_meta.'" title="'.$a_title_text.'">%%%</a>';
 				break;
+				case 'large_image' :
+					$resized = image_get_intermediate_size($attachment->ID, 'large');                                                                        
+                    if($resized !== false){
+                        $img_url = str_replace(basename($img_url), $resized['file'], $img_url);
+                    } else {
+                        $img_url = wp_get_attachment_url($attachment->ID);
+                    }
+                    $a_href = '<a href="'.$img_url.'" title="'.$a_title_text.'">%%%</a>';
+                break;
 				default :
 					if(!$rel === false) {
 						$a_href = '<a href="'.wp_get_attachment_url($attachment->ID).'" rel="'.$rel.'" title="'.$a_title_text.'">%%%</a>';

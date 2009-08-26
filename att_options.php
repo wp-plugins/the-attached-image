@@ -62,6 +62,7 @@
                 <option value="none" <?php echo ($opt_val['href'] == "none") ? 'selected="selected"' : ''; ?> >No Link</option>
                 <option value="post" <?php echo ($opt_val['href'] == "post") ? 'selected="selected"' : ''; ?> >Post</option>
                 <option value="image" <?php echo ($opt_val['href'] == "image") ? 'selected="selected"' : ''; ?> >Image</option>
+                <option value="large_image" <?php echo ($opt_val['href'] == "large_image") ? 'selected="selected"' : ''; ?> >Large Image If Exists</option>
                 <option value="attachment" <?php echo ($opt_val['href'] == "attachment") ? 'selected="selected"' : ''; ?> >Attachment</option>
             </select>
         </td>
