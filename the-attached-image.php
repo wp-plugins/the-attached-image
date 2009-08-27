@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.5.2
+Version: 2.5.3
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -495,34 +495,34 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 			
 			$a_title_text = get_title($link_title, $attachment, $default);
 			
+			if(!$rel === false) {
+                $a_href_rel = 'rel="' . $rel . '"';
+			} else {
+                $a_href_rel = '';
+            }
+            
+            $a_href_url = wp_get_attachment_url($attachment->ID);
+			
 			switch ($link) {
 				case 'post' :
-					$a_href = '<a href="'.get_permalink($post->ID).'" title="'.$a_title_text.'">%%%</a>';
-				break;
-				case 'attachment' :
-					$a_href = '<a href="'.get_attachment_link($attachment->ID).'" title="'.$a_title_text.'">%%%</a>';
-				break;
-				case 'custom' :
-					$link_meta = get_post_meta($post->ID, 'att_custom_link', true); //no need to check since it wouldn't be here if it were empty.
-					$a_href = '<a href="'.$link_meta.'" title="'.$a_title_text.'">%%%</a>';
-				break;
-				case 'large_image' :
-					$resized = image_get_intermediate_size($attachment->ID, 'large');                                                                        
-                    if($resized !== false){
-                        $img_url = str_replace(basename($img_url), $resized['file'], $img_url);
-                    } else {
-                        $img_url = wp_get_attachment_url($attachment->ID);
-                    }
-                    $a_href = '<a href="'.$img_url.'" title="'.$a_title_text.'">%%%</a>';
+                    $a_href_url = get_permalink($post->ID);
                 break;
-				default :
-					if(!$rel === false) {
-						$a_href = '<a href="'.wp_get_attachment_url($attachment->ID).'" rel="'.$rel.'" title="'.$a_title_text.'">%%%</a>';
-					} else {
-						$a_href = '<a href="'.wp_get_attachment_url($attachment->ID).'" title="'.$a_title_text.'">%%%</a>';
-					}
+                case 'attachment' :
+					$a_href_url = get_attachment_link($attachment->ID);
+                break;
+                case 'custom' :
+                    $a_href_url = get_post_meta($post->ID, 'att_custom_link', true);
 				break;
+                case 'large_image' :
+	                $resized = image_get_intermediate_size($attachment->ID, 'large');
+                    if($resized !== false){
+                        $a_href_url = str_replace(basename($img_url), $resized['file'], $img_url);
+                    }
+                break;
 			}
+			
+			$a_href = '<a href="' . $a_href_url . '" ' .  $a_href_rel .' title="' . $a_title_text . '">%%%</a>';
+			
 		}
 		if(isset($a_href) && !empty($a_href)) { //If they wanted a link put the img tag into it.
 			$image = str_replace('%%%', $image, $a_href);

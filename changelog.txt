@@ -1,3 +1,8 @@
+V 2.5.3:
+Added a fix that stopped rel attr from being applied only on default link case. Thanks to Nick Benson @ PressEnter Creative for the fix. 
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.5.2:
 Added a fix for return/echo support on in_post_image & added a suggestion from Nick Benson to link to large images if they exist.
 
