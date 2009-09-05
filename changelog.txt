@@ -1,3 +1,8 @@
+V 2.5.4:
+Added a new option to pick thumbnails sizes when using in post functionality 
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.5.3:
 Added a fix that stopped rel attr from being applied only on default link case. Thanks to Nick Benson @ PressEnter Creative for the fix. 
 

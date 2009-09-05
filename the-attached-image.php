@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.5.3
+Version: 2.5.4
 Author: Paul Robinson
 Author URI: http://return-true.com
 
@@ -42,7 +42,8 @@ function att_options_page() {
 					  'img_tag' => 'att_img_tag',
 					  'echo' => 'att_echo',
 					  'href_rel' => 'att_href_rel',
-					  'img_order' => 'att_img_order');
+					  'img_order' => 'att_img_order',
+					  'in_post_image_size' => 'att_in_post_image_size');
     $hidden_field_name = 'att_submit_hidden';
 
     // Read in existing option value from database
@@ -59,7 +60,8 @@ function att_options_page() {
 					 'img_tag' => get_option( $opt_name['img_tag']),
 					 'echo' => get_option( $opt_name['echo']),
 					 'href_rel' => get_option( $opt_name['href_rel']),
-					 'img_order' => get_option( $opt_name['img_order']));
+					 'img_order' => get_option( $opt_name['img_order']),
+					 'in_post_image_size' => get_option( $opt_name['in_post_image_size']));
 
     // See if the user has posted us some information
     // If they did, this hidden field will be set to 'Y'
@@ -81,7 +83,8 @@ function att_options_page() {
 						 'img_tag' => $_POST[ $opt_name['img_tag'] ],
 						 'echo' => $_POST[ $opt_name['echo'] ],
 						 'href_rel' => $_POST[ $opt_name['href_rel'] ],
-						 'img_order' => $_POST[ $opt_name['img_order'] ]);
+						 'img_order' => $_POST[ $opt_name['img_order'] ],
+						 'in_post_image_size' => $_POST[ $opt_name['in_post_image_size'] ]);
 
         // Save the posted value in the database
 		update_option( $opt_name['function'], $opt_val['function'] );
@@ -98,6 +101,7 @@ function att_options_page() {
 		update_option( $opt_name['echo'], $opt_val['echo'] );
 		update_option( $opt_name['href_rel'], $opt_val['href_rel'] );
 		update_option( $opt_name['img_order'], $opt_val['img_order'] );
+		update_option( $opt_name['in_post_image_size'], $opt_val['in_post_image_size'] );
 
         // Put an options updated message on the screen
 
@@ -275,6 +279,18 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 		
 	if(isset($in_post_override) && $in_post_override['status'] === true)
 		$in_post_image = $in_post_override['value'];
+		
+	if( !isset($in_post_image_size) && !get_option('att_in_post_image_size') )
+		$in_post_image_size = 'thumb';
+	elseif(isset($in_post_image_size))
+		$in_post_image_size = $in_post_image_size;
+	else {
+		if(get_post_meta($post->ID, 'att_in_post_image_size', true)) {
+			$in_post_image_size = get_post_meta($post->ID, 'att_in_post_image_size', true);
+		} else {
+			$in_post_image_size = get_option('att_in_post_image_size');
+		}
+	}
 	
 	if($custom_img_meta = get_post_meta($post->ID, 'att_custom_img', true)) {
 			$attachments = array(get_post($custom_img_meta));
@@ -294,7 +310,7 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 		preg_match_all("/<img[^']*?src=\"([^']*?)\"[^']*?>/", $post->post_content, $matches, PREG_PATTERN_ORDER);
 		
 		$image_cache = $matches[1];
-		
+				
 		--$in_post_image;
 		
 		if($in_post_image < count($image_cache)) {
@@ -307,25 +323,79 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 			return;
 		
 		}
-		
-		$img_url = urldecode($img_url);
+		if($in_post_image_size == 'full') {
+			
+			$img_url = urldecode($img_url);
+					
+			if(stristr($img_url, $_SERVER['HTTP_HOST'])) {
+				$img_full_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $img_url);
 				
-		if(stristr($img_url, $_SERVER['HTTP_HOST'])) {
-			$img_full_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $img_url);
-			
-			
-			if(file_exists($img_full_path)) {
-				$imagesize = @getimagesize($img_full_path);
-			} else {	
-				$imagesize = array();
+				if(file_exists($img_full_path)) {
+					$imagesize = @getimagesize($img_full_path);
+				} else {	
+					$imagesize = array();
+				}
+				
+			} else {
+				//if image is offsite we try our best to get the image size;
+				$imagesize = @getimagesize($img_url);
+				//if not we have to resort to making an empty array to stop PHP taking a fit.
+				if(!isset($imagesize[0])) {
+					$imagesize = array('', '', '', '');	
+				}
 			}
-			
+
 		} else {
-			//if image is offsite we try our best to get the image size;
-			$imagesize = @getimagesize($img_url);
-			//if not we have to resort to making an empty array to stop PHP taking a fit.
-			if(!isset($imagesize[0])) {
-				$imagesize = array('', '', '', '');	
+			 
+			$thumbsize = array(
+						 'width' => get_option($in_post_image_size.'_size_w'),
+						 'height' => get_option($in_post_image_size.'_size_h'),
+						 'crop' => get_option('thumbnail_crop')
+						 );
+			
+			$img_url = urldecode($img_url);
+					
+			if(stristr($img_url, $_SERVER['HTTP_HOST'])) {
+				$img_full_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $img_url);
+				
+				if($thumbsize['crop'] == 1 && $in_post_image_size != 'thumbnail') {
+				
+					list($org_w, $org_h) = @getimagesize($img_full_path);
+					
+					if($org_w > $org_h) {
+						$ratio = $org_w / $thumbsize['width'];
+						$new_h = $org_h / $ratio;
+						$thumbsize['height'] = floor($new_h);	
+					} elseif($org_h > $org_w) {
+						$ratio = $org_h / $thumbsize['height'];
+						$new_w = $org_w / $ratio;
+						$thumbsize['width'] = floor($new_w);
+					}
+				
+				}
+				
+				$pathinfo = pathinfo($img_url);
+			
+				$thumb_url = str_replace($pathinfo['filename'], $pathinfo['filename'].'-'.$thumbsize['width'].'x'.$thumbsize['height'], $img_url);
+				$thumb_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $thumb_url);
+				
+				if(file_exists($thumb_path)) {
+					$imagesize = @getimagesize($thumb_path);
+					$img_url = $thumb_url;
+				} else {
+					if(file_exists($img_full_path)) {
+						$imagesize = @getimagesize($img_full_path);
+					} else {	
+						$imagesize = array();
+					}
+				}
+			} else {
+				//if image is offsite we try our best to get the image size;
+				$imagesize = @getimagesize($img_url);
+				//if not we have to resort to making an empty array to stop PHP taking a fit.
+				if(!isset($imagesize[0])) {
+					$imagesize = array('', '', '', '');	
+				}
 			}
 		}
 		
@@ -412,6 +482,9 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 	
 		$i = 0;
 		
+		if(count($attachments) < $image_order)
+			return false;
+				
 		foreach($attachments as $id => $attachment) :
 			$i++;
 			if($i == $image_order) :

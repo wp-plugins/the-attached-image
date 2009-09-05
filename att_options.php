@@ -2,7 +2,7 @@
 <form name="att_img_options" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
   <input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
   <h3>Functionality</h3>
-  <p>This new feature allows you to choose between the two main functions of The Attached Image. Leave the checkbox off to use it as normal, which is to grab the first attached image from the current post. If you turn on the checkbox the plugin will instead use the nth numbered image tag from the post content, where n is the number placed in the box that appears to the right of the checkbox.</p>
+  <p>This new feature allows you to choose between the two main functions of The Attached Image. Leave the checkbox off to use it as normal, which is to grab the first attached image from the current post. If you turn on the checkbox the plugin will instead use the nth numbered image tag from the post content, where n is the number placed in the box that appears to the right of the checkbox. Remember the size 'In Post' size option will only work if the in post functionality is switched on.</p>
   <table class="form-table">
   <tbody>
   <tr>
@@ -11,6 +11,19 @@
     </th>
     <td>
     	<label>Turn On In Post Image Functionality: <input type="checkbox" value="true" name="<?php echo $opt_name['function']; ?>" <?php echo (isset($opt_val['function']) && $opt_val['function'] == "true") ? 'checked="checked"' : ''; ?>  /></label>&nbsp;&nbsp;&nbsp;&nbsp;<input id="function_number" type="text" name="<?php echo $opt_name['function_number']; ?>" value="<?php echo $opt_val['function_number']; ?>" />
+    </td>
+  </tr>
+  <tr>
+    <th valign="top">
+    	<?php _e("In Post Image Size:", 'att_trans_domain' ); ?><br/><small>If image was uploaded with wordpress, will try & get the requested size.</small>
+    </th>
+    <td>
+    	<select name="<?php echo $opt_name['in_post_image_size']; ?>">
+          	<option value="thumbnail" <?php echo ($opt_val['in_post_image_size'] == "thumbnail") ? 'selected="selected"' : ''; ?> >Thumbnail</option>
+            <option value="medium" <?php echo ($opt_val['in_post_image_size'] == "medium") ? 'selected="selected"' : ''; ?> >Medium</option>
+            <option value="large" <?php echo ($opt_val['in_post_image_size'] == "large") ? 'selected="selected"' : ''; ?> >Large</option>
+            <option value="full" <?php echo ($opt_val['in_post_image_size'] == "full") ? 'selected="selected"' : ''; ?> >Full Size</option>
+          </select>
     </td>
   </tr>
   </tbody>
