@@ -3,8 +3,9 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.5.4
+Version: 2.5.5
 Author: Paul Robinson
+ToDo: Massive code cleanup, basically clean up the code comment it alot & stuff planned for version 2.6.
 Author URI: http://return-true.com
 
 	Copyright (c) 2008, 2009 Paul Robinson (http://return-true.com)
@@ -323,15 +324,26 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 			return;
 		
 		}
+				
 		if($in_post_image_size == 'full') {
 			
 			$img_url = urldecode($img_url);
-					
+			
 			if(stristr($img_url, $_SERVER['HTTP_HOST'])) {
 				$img_full_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $img_url);
 				
 				if(file_exists($img_full_path)) {
 					$imagesize = @getimagesize($img_full_path);
+					$in_post_num_matches = preg_match_all('/\-(\d+)x(\d+)/is', $img_url, $in_post_matches);
+					if($in_post_num_matches > 0) {
+						$in_post_num_matches--;
+						$second_img_url = str_replace($in_post_matches[0][$in_post_num_matches], '', $img_url);
+						$thumb_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $thumb_url);
+						if(file_exists($thumb_path)) {
+							$img_url = $second_img_url;
+							$imagesize = @getimagesize($thumbpath);
+						}
+					}
 				} else {	
 					$imagesize = array();
 				}
@@ -346,7 +358,7 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 			}
 
 		} else {
-			 
+						 
 			$thumbsize = array(
 						 'width' => get_option($in_post_image_size.'_size_w'),
 						 'height' => get_option($in_post_image_size.'_size_h'),
@@ -358,7 +370,7 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 			if(stristr($img_url, $_SERVER['HTTP_HOST'])) {
 				$img_full_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $img_url);
 				
-				if($thumbsize['crop'] == 1 && $in_post_image_size != 'thumbnail') {
+				if(($thumbsize['crop'] == 1 && $in_post_image_size != 'thumbnail') || ($thumbsize['crop'] == 0)) {
 				
 					list($org_w, $org_h) = @getimagesize($img_full_path);
 					
@@ -378,6 +390,18 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 			
 				$thumb_url = str_replace($pathinfo['filename'], $pathinfo['filename'].'-'.$thumbsize['width'].'x'.$thumbsize['height'], $img_url);
 				$thumb_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $thumb_url);
+				
+				if(!file_exists($thumb_path)) {
+					$in_post_num_matches = preg_match_all('/\-(\d+)x(\d+)/is', $img_url, $in_post_matches);
+					if($in_post_num_matches > 0) {
+						$in_post_num_matches--;
+						$second_img_url = str_replace($in_post_matches[0][$in_post_num_matches], '', $img_url);
+						$pathinfo = pathinfo($second_img_url);
+						$thumb_url = str_replace($pathinfo['filename'], $pathinfo['filename'].'-'.$thumbsize['width'].'x'.$thumbsize['height'], $second_img_url);
+						$thumb_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $thumb_url);
+					}
+				
+				}
 				
 				if(file_exists($thumb_path)) {
 					$imagesize = @getimagesize($thumb_path);
@@ -425,7 +449,6 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 			$info['width'] = 0;
 			$info['size'] = 'height="'.$height.'"';
 		}
-			
 		
 		$image_output = '<img class="' . $css_class . '" src="' . $info['url'] . '" ' . $info['size'] . ' title="' . $info['title'] . '" alt="' . $info['title'] . '" />';
 		
