@@ -1,3 +1,8 @@
+V 2.5.6:
+Removed RSS feature due to incompatibilities & major flaws.
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.5.5:
 Major overhaul of in_post_image system, including WP thumbnail detector.
 
