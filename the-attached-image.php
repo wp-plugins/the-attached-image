@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.5.6
+Version: 2.5.7
 Author: Paul Robinson
 ToDo: Massive code cleanup, basically clean up the code comment it alot & stuff planned for version 2.6.
 Author URI: http://return-true.com
@@ -388,6 +388,8 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 			
 				$thumb_url = str_replace($pathinfo['filename'], $pathinfo['filename'].'-'.$thumbsize['width'].'x'.$thumbsize['height'], $img_url);
 				$thumb_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $thumb_url);
+				$thumb_url = str_replace('.'.$pathinfo['extension'], '.'.strtolower($pathinfo['extension']), $thumb_url);
+				$thumb_path = str_replace('.'.$pathinfo['extension'], '.'.strtolower($pathinfo['extension']), $thumb_path);
 				
 				if(!file_exists($thumb_path)) {
 					$in_post_num_matches = preg_match_all('/\-(\d+)x(\d+)/is', $img_url, $in_post_matches);
@@ -397,6 +399,8 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 						$pathinfo = pathinfo($second_img_url);
 						$thumb_url = str_replace($pathinfo['filename'], $pathinfo['filename'].'-'.$thumbsize['width'].'x'.$thumbsize['height'], $second_img_url);
 						$thumb_path = $_SERVER['DOCUMENT_ROOT'] . str_replace('http://'.$_SERVER['HTTP_HOST'], '', $thumb_url);
+						$thumb_url = str_replace('.'.$pathinfo['extension'], '.'.strtolower($pathinfo['extension']), $thumb_url);
+						$thumb_path = str_replace('.'.$pathinfo['extension'], '.'.strtolower($pathinfo['extension']), $thumb_path);
 					}
 				
 				}

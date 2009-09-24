@@ -1,3 +1,8 @@
+V 2.5.7:
+Minor case-sensitivity bug
+
+~~~~~~~~~~~~~~~~~~~~
+
 V 2.5.6:
 Removed RSS feature due to incompatibilities & major flaws.
 
