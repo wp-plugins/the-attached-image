@@ -75,6 +75,8 @@
   <dd>Allows you to chose a custom alt attibute to be placed in the image tag.</dd>
   <dt><strong>Key:</strong> <em>att_custom_link_title</em></dt>
   <dd>Allows you to chose a custom title attribute to be placed in the hyperlink. Only has an effect if Link Image Location is <strong>NOT</strong> set to No Link.</dd>
+  <dt><strong>Key:</strong> <em>att_img_order</em></dt>
+  <dd>Allows you to change which image is picked by the plugin. Default is 1. If set higher the plugin will look for an attachment of that number attached to the post. For example, if 5 images are attached &amp; you set to 3 it will pick the third image down on the gallery list. If there is not 3 images attached it will pick the one available nearest to the number provided.</dd>
   <dt><strong>Key:</strong> <em>att_in_post_image</em></dt>
   <dd>This feature was requested by Jake Garrison. It allows you to display an image that is inserted into the post &amp; not attached via the WP uploader. It scans for img tags in the post and places it where ever you place the plugin call. Options are a number starting from 1 of the img tag you wish to pic from the post. 1 will pic the first, 2 will pic the second and so on. If there isn't a img tag matches the number picked it will leave a blank space (return false). Example. If you choose 4 and there are only 3 images in the post in will return blank (return false).</dd>
 </dl>

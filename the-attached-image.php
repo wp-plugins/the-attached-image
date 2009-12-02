@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.5.7
+Version: 2.5.8
 Author: Paul Robinson
 ToDo: Massive code cleanup, basically clean up the code comment it alot & stuff planned for version 2.6.
 Author URI: http://return-true.com
@@ -130,15 +130,22 @@ if(isset($_GET['wpatt-page']) && $_GET['wpatt-page'] == 'docs') {
 
 
 function the_attached_image($args='', $qry_obj = FALSE) {
-	global $wp_query;
+	global $wp_query, $post;
 	
 	if($qry_obj !== FALSE) {
 		$post = $qry_obj->post;
-	} else {
+	} elseif(empty($post)) {
 		$post = $wp_query->post;
 	}
 	
-	parse_str($args); //Tenutive support for the old options method. Please use the options page, it's much neater.
+	parse_str($args);
+	
+	/* 
+	   To anyone reading... Yes this section is increadably nasty & needs cleaning desperately.
+	   I've started on a new version of TAI which should be
+	   done for the next major version, probably 2.6/2.7. Until then I'm afraid this is what authoring a plugin when you are a
+	   novice will get you. We all have to start somewhere though I guess. 
+	*/
 	
 	if( get_option('att_function') == "true") {
 		$in_post_override['status'] = true;
@@ -247,8 +254,10 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 	else 
 		$height = get_option('att_img_height');
 		
-	if( !isset($image_order) && !get_option('att_img_order') ) {
+	if( !isset($image_order) && !get_option('att_img_order') && get_post_meta($post->ID, 'att_img_order', true) == "") {
 		$image_order = 1;
+	} elseif(get_post_meta($post->ID, 'att_img_order', true)) {
+		$image_order = get_post_meta($post->ID, 'att_img_order', true);
 	} elseif(isset($image_order)) {
 		if(is_numeric($image_order))
 			$image_order = intval($image_order);
@@ -261,6 +270,8 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 		else
 			$image_order = 1;
 	}
+	
+	//var_dump(get_post_meta($post->ID, 'att_img_order', true));
 	
 	if( !isset($rel) && !get_option('att_href_rel') )
 		$rel = false; 
@@ -293,6 +304,12 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 	
 	if($custom_img_meta = get_post_meta($post->ID, 'att_custom_img', true)) {
 			$attachments = array(get_post($custom_img_meta));
+			$attachments = get_children(array('post_parent' => $attachments[0]->ID,
+											  'post_status' => 'inherit',
+											  'post_type' => 'attachment',
+											  'post_mime_type' => 'image',
+											  'order' => 'ASC',
+											  'orderby' => 'menu_order ID'));
 			$custom_img = true;
 	} else {
 			$custom_img = false;	
@@ -318,7 +335,7 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 			
 		} else {
 			
-			echo create_default_image($link, $link_title, $width, $height, $href, $post, $default, $css_class, $alt);
+			echo create_default_image($link, $link_title, $width, $height, $href, $post, $default, $css_class, $alt, $img_tag);
 			return;
 		
 		}
@@ -494,7 +511,7 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 	
 	if(empty($attachments)) { //If attachments is empty then we should check for a default image via meta or via function call.
 		
-		$image = create_default_image($link, $link_title, $width, $height, $href, $post, $default, $css_class, $alt);
+		$image = create_default_image($link, $link_title, $width, $height, $href, $post, $default, $css_class, $alt, $img_tag);
 		
 		if($image === false)
 			return false;
@@ -506,9 +523,10 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 	if(!isset($image) && empty($image)) { //Gets the correct image depending upon whether or not $image has been set or not.
 	
 		$i = 0;
+		$attach_total = count($attachments);
 		
-		if(count($attachments) < $image_order)
-			return false;
+		if($attach_total < $image_order)
+			$image_order = $attach_total;
 				
 		foreach($attachments as $id => $attachment) :
 			$i++;
@@ -664,7 +682,7 @@ function have_attached_image() {
 	
 }
 
-function create_default_image($link, $link_title, $width, $height, $href, $post, $default, $css_class, $alt) {
+function create_default_image($link, $link_title, $width, $height, $href, $post, $default, $css_class, $alt, $img_tag) {
 	
 	if($pic_meta = get_post_meta($post->ID, 'att_default_pic', true)) {
 		$default = $pic_meta;
@@ -672,9 +690,7 @@ function create_default_image($link, $link_title, $width, $height, $href, $post,
 		return false;
 	}
 	
-	// Thanks to Eduardo Gonzalez for the bug report & fix. Fix is perfect so no modification need. ;-) 
-	$img_tag = get_option('att_img_tag');
-
+	// Thanks to Eduardo Gonzalez for the bug report & fix. Fix needs a little modification due to unforseen bug. 
 	if($img_tag === true || $img_tag == 'true')	{
 		//Do they want an image tag along with setting the height & width.
 		$image = '<img src="'.get_bloginfo('url').$default.'" class="'.$css_class.'" ';
