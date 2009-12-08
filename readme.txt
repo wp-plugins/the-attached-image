@@ -38,6 +38,9 @@ You can ask me it by leaving a comment on that post I linked to in the last ques
 
 == Changelog ==
 
+= 2.5.9 =
+* Very silly mistake. Forgot to undo a change I was testing which causes custom_img useage to break.
+
 = 2.5.8 =
 * Fixed default image problem if used without setting up the admin page.
 * Added custom field key for use with image order system.
