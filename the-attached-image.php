@@ -115,8 +115,27 @@ function att_options_page() {
 <?php
 	}
 ?>
-<div class="wrap">
-<h2><?php _e( 'The Attached Image', 'att_trans_domain' ); ?></h2>
+    <div class="wrap">
+    	<h2><?php _e( 'The Attached Image Options', 'att_trans_domain' ); ?></h2>
+    	Created by <strong>Paul Robinson</strong>.
+    	<div style="width: 500px; margin-top:10px;">
+    		<div style="border: 1px solid rgb(221, 221, 221); padding: 10px; float: left; background-color: white; margin-right: 15px;">
+    			<div style="width: 350px; height: 130px; float:left;">
+        			<h3>Donate</h3>
+   					<p>If you like this plugin and have found it to be useful, please help me keep this plugin free by clicking the <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9155415" target="_blank"><strong>donate</strong></a> button, or you can send me a gift from my <a href="https://www.amazon.co.uk/registry/wishlist/3IACY9WPVEPXC/ref=wl_web" target="_blank"><strong>Amazon wishlist</strong></a>. Thank you.</p>
+    			</div>
+    			<div style="width:100px; float:left; margin:15px 0 0 10px;">
+        			<a target="_blank" title="Donate" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9155415"><img src="<?php echo WP_PLUGIN_URL; ?>/the-attached-image/donate-paypal.jpg" alt="Donate with Paypal">	</a>
+    
+        <a target="_blank" title="Amazon Wish List" href="https://www.amazon.co.uk/registry/wishlist/3IACY9WPVEPXC/ref=wl_web">
+        <img src="<?php echo WP_PLUGIN_URL; ?>/the-attached-image/amazon-wishlist.jpg" alt="My Amazon Wish List"> </a>
+    </div>
+    <div style="clear:both;"></div>
+        
+    </div>
+    </div>
+    <div style="clear: both;"></div>
+
 <?php
 if(isset($_GET['wpatt-page']) && $_GET['wpatt-page'] == 'docs') {
 	require_once('att_docs.php'); //select the documentation.

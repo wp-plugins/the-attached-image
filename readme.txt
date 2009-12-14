@@ -4,7 +4,7 @@ Donate link: http://return-true.com/donations/
 Tags: images, attachments, posts
 Requires at least: 2.5
 Tested up to: 2.9
-Stable tag: 2.5.8
+Stable tag: 2.5.9
 
 The Attached Image is a simple plugin that packs quite a punch. It shows the first image attached to the current post. It was inspired by a plugin wrote by Kaf Oseo, but when support was stopped &amp; a recent upgrade of WordPress meant it didn't work exactly like it used to I decided to take on the challenge of remaking it using the new WordPress functions available.
 
@@ -39,10 +39,11 @@ You can ask me it by leaving a comment on that post I linked to in the last ques
 == Changelog ==
 
 = 2.5.9 =
-* Very silly mistake. Forgot to undo a change I was testing which causes custom_img useage to break.
+* Minor update for asthetics & added donations box to admin after requests for an easy way to support the plugin.
 
 = 2.5.8 =
 * Fixed default image problem if used without setting up the admin page.
+* Changed custom_img system to use ID of post with custom image instead of attachment ID.
 * Added custom field key for use with image order system.
 
 = 2.5.7 =
