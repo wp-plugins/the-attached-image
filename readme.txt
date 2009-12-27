@@ -6,7 +6,7 @@ Requires at least: 2.5
 Tested up to: 2.9
 Stable tag: 2.5.9.1
 
-The Attached Image is a simple plugin that packs quite a punch. It shows the first image attached to the current post. It was inspired by a plugin wrote by Kaf Oseo, but when support was stopped &amp; a recent upgrade of WordPress meant it didn't work exactly like it used to I decided to take on the challenge of remaking it using the new WordPress functions available.
+The Attached Image is a simple plugin that packs quite a punch. It shows the first image attached to the current post.
 
 == Description ==
 
