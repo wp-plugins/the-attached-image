@@ -1,10 +1,10 @@
 === The Attached Image ===
-Contributors: veneficusunus, Nick Benson; PressEnter Creative, RogueDeals.com
+Contributors: veneficusunus, Nick Benson; PressEnter Creative, RogueDeals.com, Upekshapriya
 Donate link: http://return-true.com/donations/
 Tags: images, attachments, posts
 Requires at least: 2.5
-Tested up to: 2.9
-Stable tag: 2.5.9.1
+Tested up to: 3.0
+Stable tag: 2.5.9.2
 
 The Attached Image is a simple plugin that packs quite a punch. It shows the first image attached to the current post.
 
@@ -37,6 +37,9 @@ Well most of the questions asked are now irrelevant as there is a detailed post 
 You can ask me it by leaving a comment on that post I linked to in the last question, you can send an email via the contact form on that website or you can send me an email straight to pablorobinson[at]gmail[dot]com.
 
 == Changelog ==
+
+= 2.5.9.2 =
+* Added cleaner code for displaying full image contributed by Upekshapriya.
 
 = 2.5.9.1 =
 * Fixed problem with img tag ignoring the disable command when using in post image functionallity.

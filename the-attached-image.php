@@ -3,7 +3,7 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.5.9.1
+Version: 2.5.9.2
 Author: Paul Robinson
 ToDo: Massive code cleanup, basically clean up the code comment it alot & stuff planned for version 2.6.
 Author URI: http://return-true.com
@@ -105,7 +105,6 @@ function att_options_page() {
         // Put an options updated message on the screen
 
 ?>
-
 <div id="message" class="updated fade">
   <p><strong>
     <?php _e('Options saved.', 'att_trans_domain' ); ?>
@@ -585,10 +584,12 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 			}
 		} elseif ( $img_size == 'full' ) {
 			//Get the image's size since it will make our HTML invalid & the code won't close the img tag without a width & height.
-			$split_pos = strpos($img_url, 'wp-content');
-			$split_len = (strlen($img_url) - $split_pos);
-			$abs_img_url = substr($img_url, $split_pos, $split_len);
-			$full_info = @getimagesize(ABSPATH.$abs_img_url);
+			//$split_pos = strpos($img_url, 'wp-content');
+			//$split_len = (strlen($img_url) - $split_pos);
+			//$abs_img_url = substr($img_url, $split_pos, $split_len);
+			//$full_info = @getimagesize(ABSPATH.$abs_img_url);
+			//Thanks to Upekshapriya for pointing out that using this function is much cleaner.
+			$full_info = wp_get_attachment_image_src($attachment->ID, 'full'); 
 			if($width === false && $height === false) {
 				$width = $full_info[0];
 				$height = $full_info[1];
