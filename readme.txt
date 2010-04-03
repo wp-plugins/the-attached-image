@@ -4,7 +4,7 @@ Donate link: http://return-true.com/donations/
 Tags: images, attachments, posts
 Requires at least: 2.5
 Tested up to: 3.0
-Stable tag: 2.5.9.3
+Stable tag: 2.5.9.4
 
 The Attached Image is a simple plugin that packs quite a punch. It shows the first image attached to the current post.
 
@@ -38,8 +38,11 @@ You can ask me it by leaving a comment on that post I linked to in the last ques
 
 == Changelog ==
 
+= 2.5.9.4 =
+* Added the correct way to grab width & height from the info returned by WP.
+
 = 2.5.9.3 =
-* WP provides height/width instead of width/height... Who knew...
+* Ahem! Nothing to see here. Making stupid mistakes.
 
 = 2.5.9.2 =
 * Added cleaner code for displaying full image contributed by Upekshapriya.
