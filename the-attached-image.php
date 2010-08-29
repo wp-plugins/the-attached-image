@@ -3,16 +3,15 @@
 Plugin Name: The Attached Image
 Plugin URI: http://return-true.com/2008/12/wordpress-plugin-the-attached-image/
 Description: Display the first image attached to a post. Use the_attached_image() in the post loop. Order can be changed using menu order via the WP gallery. Based on the post image WordPress plugin by Kaf Oseo.
-Version: 2.5.9.4
+Version: 2.6
 Author: Paul Robinson
-ToDo: Massive code cleanup, basically clean up the code comment it alot & stuff planned for version 2.6.
+ToDo: Massive code cleanup, basically clean up the code comment it alot & stuff planned for version 2.7.
 Author URI: http://return-true.com
 
-	Copyright (c) 2008, 2009 Paul Robinson (http://return-true.com)
+	Copyright (c) 2008-2010 Paul Robinson (http://return-true.com)
 	The Attached Image is released under the GNU General Public License (GPL)
 	http://www.gnu.org/licenses/gpl.txt
 
-	This is a WordPress 2 plugin (http://wordpress.org).
 	Based on the post image WordPress plugin by Kaf Oseo.
 	Comments are there for those who wish to learn or make mods.
 */
@@ -594,7 +593,17 @@ function the_attached_image($args='', $qry_obj = FALSE) {
 				$width = $full_info[1];
 				$height = $full_info[2];
 			}
-		} 
+		} else { //If it's not one of the previous it must be a post-thumbnail size. Check it out.
+			if( $intermediate = image_get_intermediate_size($attachment->ID, $img_size) ) {
+				$img_url = str_replace(basename($img_url), $intermediate['file'], $img_url);
+				if($width === false && $height === false) {
+					$width = $intermediate['width'];
+					$height = $intermediate['height'];
+				}
+			} else { //No custom thumbnail detected... Use Viperbonds regen thumbnail to create thumbnails for old images when adding post-thumbnail support.
+				return false;
+			}
+		}
 		
 		if($img_tag === true || $img_tag == 'true') { //Do they want an image tag along with setting the height & width.
 			$image = '<img src="'.$img_url.'" class="'.$css_class.'"';
