@@ -3,7 +3,7 @@ Contributors: veneficusunus, Nick Benson; PressEnter Creative, RogueDeals.com, U
 Donate link: http://return-true.com/donations/
 Tags: images, attachments, posts
 Requires at least: 2.5
-Tested up to: 3.0.1
+Tested up to: 3.3.1
 Stable tag: 2.6.1
 
 The Attached Image is a simple plugin that packs quite a punch. It shows the first image attached to the current post.
