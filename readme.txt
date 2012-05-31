@@ -3,8 +3,8 @@ Contributors: veneficusunus, Nick Benson; PressEnter Creative, RogueDeals.com, U
 Donate link: http://return-true.com/donations/
 Tags: images, attachments, posts
 Requires at least: 2.5
-Tested up to: 3.3.1
-Stable tag: 2.6.2
+Tested up to: 3.3.2
+Stable tag: 2.6.3
 
 The Attached Image is a simple plugin that packs quite a punch. It shows the first image attached to the current post.
 
@@ -37,6 +37,9 @@ Well most of the questions asked are now irrelevant as there is a detailed post 
 You can ask me it by leaving a comment on that post I linked to in the last question, you can send an email via the contact form on that website or you can send me an email straight to pablorobinson[at]gmail[dot]com.
 
 == Changelog ==
+
+= 2.6.3 =
+* Add query object passthrough for have_attached_image() function.
 
 = 2.6.2 =
 * WordPress version compat update.
